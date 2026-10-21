@@ -15,8 +15,8 @@
     </a>
     <ul class="nav-links">
       <li><a href="#problema">El Problema</a></li>
-      <li><a href="#solucion">Solución 3D</a></li>
-      <li><a href="#demo-reservas">Motor Atómico</a></li>
+      <li><a href="#solucion">Solución</a></li>
+      <li><a href="#demo-reservas">Reservas</a></li>
       <li><a href="#reformer-3d">Reformer 3D</a></li>
       <li><a href="#precios">Planes</a></li>
       <li><a href="#faq">FAQ</a></li>
@@ -34,40 +34,49 @@
   <!-- Mobile Drawer -->
   <div class="mobile-drawer" id="mobileDrawer">
     <a href="#problema" onclick="toggleMobileMenu()">El Problema</a>
-    <a href="#solucion" onclick="toggleMobileMenu()">Solución 3D</a>
-    <a href="#demo-reservas" onclick="toggleMobileMenu()">Motor Atómico</a>
+    <a href="#solucion" onclick="toggleMobileMenu()">Solución</a>
+    <a href="#demo-reservas" onclick="toggleMobileMenu()">Reservas</a>
     <a href="#reformer-3d" onclick="toggleMobileMenu()">Reformer 3D</a>
     <a href="#precios" onclick="toggleMobileMenu()">Planes</a>
     <a href="#faq" onclick="toggleMobileMenu()">FAQ</a>
   </div>
 
-  <!-- SECCIÓN 1: HERO SPATIAL & PARABOLIC RIBBON -->
-  <section class="hero-container" id="hero">
-    <div class="hero-dot-grid"></div>
-    <div class="hero-title-area">
-      <div class="hero-category-pill">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        <span>Hecho para estudios que se mueven</span>
-      </div>
-      <h1 class="hero-serif-title">
-        Que tu estudio fluya.<br>
-        <em>Sin perder el control.</em>
-      </h1>
-      <p class="hero-subtext">
-        Tu comunidad llega a moverse. Open Break organiza lo que sucede detrás: horarios, lugares, paquetes y asistencia en una sola experiencia.
-      </p>
-      <div class="hero-cta-group">
-        <button class="btn-primary" onclick="openDemoModal()">Preparar demo</button>
-        <a href="#demo-reservas" class="btn-secondary">Explorar Open Break</a>
+  <!-- HERO DE COMPOSICIÓN ESPACIAL: contenido y escena forman una sola sección -->
+  <section class="hero-container ob-cinematic-hero" id="hero" aria-labelledby="ob-hero-title">
+    <div class="hero-dot-grid" aria-hidden="true"></div>
+    <div class="ob-hero-head">
+      <h1 id="ob-hero-title">Todo tu estudio.<br><span>En un solo lugar.</span></h1>
+    </div>
+    <div class="ob-tunnel" id="obTunnel" aria-label="Galería visual de espacios de fitness boutique">
+      <div class="ob-tunnel-vanishing" aria-hidden="true"></div>
+      <div class="ob-tunnel-gallery" aria-hidden="true"><div class="tunnel-panel" data-side="left" data-depth="0" aria-hidden="true"><img src="assets/optimized/studio_hero.webp" alt="" fetchpriority="high" decoding="async"></div>
+<div class="tunnel-panel" data-side="left" data-depth="1" aria-hidden="true"><img src="assets/optimized/ribbon_1.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="left" data-depth="2" aria-hidden="true"><img src="assets/optimized/coach_guiding.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="left" data-depth="3" aria-hidden="true"><img src="assets/optimized/ribbon_3.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="left" data-depth="4" aria-hidden="true"><img src="assets/optimized/reformer_close.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="left" data-depth="5" aria-hidden="true"><img src="assets/optimized/ribbon_4.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="0" aria-hidden="true"><img src="assets/optimized/studio_light.webp" alt="" fetchpriority="high" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="1" aria-hidden="true"><img src="assets/optimized/ribbon_2.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="2" aria-hidden="true"><img src="assets/optimized/class_action.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="3" aria-hidden="true"><img src="assets/optimized/ribbon_5.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="4" aria-hidden="true"><img src="assets/optimized/studio_minimal.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="5" aria-hidden="true"><img src="assets/optimized/ribbon_1.webp" alt="" loading="lazy" decoding="async"></div></div>
+      <div class="ob-hero-copy">
+        <p>La experiencia de tus alumnas, en armonía.<br>Clases, reservas, paquetes y recepción conectados.</p>
+        <div class="ob-hero-actions">
+          <a class="ob-hero-action" href="#agenda-app" aria-label="Explorar una demostración del funcionamiento de Open Break"><span class="ob-action-icon" aria-hidden="true">↗</span><span>Explora un día con Open Break</span><span class="ob-action-arrow" aria-hidden="true">→</span></a>
+          <button class="ob-tunnel-pause" id="obTunnelPause" type="button" aria-pressed="false" aria-label="Pausar movimiento de la galería"><span aria-hidden="true">Ⅱ</span></button>
+        </div>
       </div>
     </div>
-
-    <!-- Parabolic Ribbon 3D (OB-01, OB-02, OB-11: Tarjetas con paths y accesibilidad limpia) -->
-    <div class="conveyor-viewport" id="conveyorViewport">
-      <div class="conveyor-track" id="ribbonTrack">
+    <div class="ob-hero-bottom"><span>Una nueva manera de llevar tu estudio</span><a href="#problema">Desliza para descubrir <span aria-hidden="true">↓</span></a></div>
+  </section>
+  <section class="ob-gallery-section" aria-labelledby="ob-gallery-title">
+    <div class="ob-gallery-intro"><div><span class="ob-gallery-eyebrow">UN ESTUDIO, MUCHAS FORMAS DE MOVERSE</span><h2 id="ob-gallery-title">El ritmo de cada espacio es distinto.</h2></div><p>Una plataforma pensada para Reformer, Barre, Yoga y clases boutique de grupos pequeños.</p></div>
+    <div class="conveyor-controls"><span>Momentos del estudio · Arrastra para explorar</span><button id="pauseRibbonButton" type="button" aria-pressed="false">Pausar movimiento</button></div>
+    <div class="conveyor-viewport" id="conveyorViewport"><div class="conveyor-track" id="ribbonTrack">
         <!-- RIBBON_CARDS_SLOT -->
-      </div>
-    </div>
+    </div></div>
   </section>
 
   <!-- SECCIÓN 2: EL PROBLEMA -->
@@ -383,6 +392,7 @@
   </section>
 
   <!-- SECCIÓN 10: PRECIOS TRANSPARENTES 2026 (MXN) -->
+  <!-- AGENDA_MOBILE_SLOT -->
   <section class="pricing-section" id="precios">
     <div class="pricing-container">
       <div class="pricing-header">

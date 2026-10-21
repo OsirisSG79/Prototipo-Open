@@ -55,19 +55,19 @@ head=head.replace('  <style>', '  <meta name="theme-color" content="#FCFBF8">\n 
 head=re.sub(r'transition:\s*all\s+([^;]+);',r'transition: transform \1, opacity \1, background-color \1;',head)
 cssrest=read('templates/part2_css_rest.html')
 cssrest=re.sub(r'transition:\s*all\s+([^;]+);',r'transition: transform \1, opacity \1, background-color \1;',cssrest)
-cssrest=cssrest.replace('</head>','  <link rel="stylesheet" href="src/css/editorial.css">\n</head>')
+cssrest=cssrest.replace('</head>','  <link rel="stylesheet" href="src/css/editorial.css">\n  <link rel="stylesheet" href="src/css/cinematic-hero.css">\n</head>')
 body=read('templates/part3_body_sections.html')
 body=body.replace('<!-- RIBBON_CARDS_SLOT -->',ribbon)
 body=body.replace('<!-- DISCIPLINE_CARDS_SLOT -->',disc_html)
+body=body.replace('<!-- AGENDA_MOBILE_SLOT -->',read('src/modules/schedule_mobile_section.html'))
 body=body.replace('id="webglFallbackCard"',f'id="webglFallbackCard" style="{bg(images["studio_hero"])}"')
-body=body.replace('<div class="conveyor-viewport" id="conveyorViewport">','''<div class="conveyor-controls"><span>Escenas de un estudio en movimiento · Arrastra para explorar</span><button id="pauseRibbonButton" type="button" aria-pressed="false">Pausar movimiento</button></div>
-    <div class="conveyor-viewport" id="conveyorViewport">''')
 body=body.replace('<section class="pricing-section"',read('src/modules/workflow_section.html')+'\n  <section class="pricing-section"')
 body=body.replace('<div id="custom-cursor"></div>','<div id="custom-cursor" aria-hidden="true"><span id="custom-cursor-label"></span></div>')
 body=body.replace('onclick="triggerCarriageGlide()"','onclick="triggerCarriageGlide()" data-reformer-control="true"')
 body=body.replace('onclick="resetReformerCamera()"','onclick="resetReformerCamera()" data-reformer-control="true"')
 body=body.replace('onclick="toggleReformerSprings()"','onclick="toggleReformerSprings()" data-reformer-control="true"')
 legacy=read('templates/part4_js_logic.html')
+more_scripts='\n<script src="src/js/hero-tunnel.js" defer></script>\n<script src="src/js/schedule-sync.js" defer></script>\n'
 modules='\n'.join(read(f'src/js/{name}.js').replace('export class ','class ',1) for name in ['cursor','ribbon','studio-canvas','reformer-3d'])
 controller=f'''<script src="assets/three.min.js"></script>
 <script>
@@ -94,6 +94,6 @@ function resetReformerCamera(){{reformerInstance?.resetCamera()}}
 </script>
 '''
 # opt-in to JS-reveal only through parent class after initial layout, preserve content if JS fails
-out=head+cssrest+body+controller+legacy
+out=head+cssrest+body+controller+more_scripts+legacy
 for name in ('landing_melius_style.html','index.html'):(BASE/name).write_text(out,encoding='utf-8')
 print('Build complete | HTML:',len(out.encode()),'bytes | assets:',len(images),'optimized images')
