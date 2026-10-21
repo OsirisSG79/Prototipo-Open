@@ -1,0 +1,55 @@
+/* ==========================================================================
+   OPEN BREAK — DESIGN & MOTION TOKENS (Awwwards / Melius Calibrated)
+   ========================================================================== */
+
+:root {
+  /* Paleta Editorial & Boutique */
+  --bg-white: #FFFFFF;
+  --bg-warm: #FBFBFB;
+  --bg-gray-subtle: #F8F9FA;
+  --bg-dark: #111111;
+  --bg-card-dark: #18181B;
+  --border-subtle: rgba(17, 17, 17, 0.08);
+  --border-dark: rgba(255, 255, 255, 0.12);
+  --text-black: #111111;
+  --text-editorial: #666666;
+  --text-secondary: #888888;
+  --text-white: #FFFFFF;
+  
+  /* Acentos con Identidad de Marca */
+  --accent-orange: #FF5500;
+  --accent-orange-hover: #E04B00;
+  --accent-yellow: #FFDD00;
+  --accent-green: #10B981;
+  --accent-blue-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Tipografías */
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Motion Tokens (Master Spec) */
+  --ease-primary: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-cinematic: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-micro: 180ms;
+  --duration-card: 450ms;
+  --duration-editorial: 750ms;
+  
+  /* Sombras Espaciales */
+  --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 12px 35px rgba(0, 0, 0, 0.06);
+  --shadow-floating: 0 25px 60px rgba(0, 0, 0, 0.12);
+  --shadow-deep-dark: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+/* Accesibilidad Estricta */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  #custom-cursor { display: none !important; }
+}

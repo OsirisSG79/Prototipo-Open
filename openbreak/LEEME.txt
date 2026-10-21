@@ -1,0 +1,24 @@
+# Open Break — The Operating System for Boutique Studios
+
+## Contenido del Paquete
+
+1. **`landing_melius_style.html`**:
+   - Experiencia completa con estética y microinteracciones Melius (3D Parabolic Ribbon continuo a 60 FPS, 3D Cascading Solutions Deck con descarte y 4 satélites funcionales, simulador WebGL de cama Reformer en Three.js con glide y cambio de resortes, split canvas con cables Bézier dinámicos en tiempo real, modal de simulación de concurrencia y tabla de precios 2026).
+   - Incluye assets visuales optimizados (Base64) y Three.js local para funcionamiento 100% autónomo sin dependencias externas.
+
+2. **`prototype.html`**:
+   - Prototipo interactivo del flujo de reserva del alumno (selección de camas, confirmación de plaza, lista de espera) y panel táctil de recepción para check-in por código QR.
+
+3. **`schema.py`**:
+   - Modelo de base de datos relacional para PostgreSQL / Supabase que implementa el motor de reservas con bloqueo atómico a nivel de fila (`SELECT ... FOR UPDATE`), billetera inmutable de créditos y arquitectura multi-inquilino.
+
+4. **`PLAN_PRODUCTO_UX.md`**:
+   - Especificación detallada de producto, reglas de negocio (políticas de cancelación de 12 horas, listas de espera deterministas, ledger de transacciones) y hoja de ruta técnica de 10 semanas.
+
+5. **`assets/`**:
+   - Fotografías de alta resolución de estudios boutique y entrenadores de Pilates Reformer.
+   - Biblioteca local de `three.min.js`.
+   - `data_uris.json` con representaciones serializadas de assets para entornos cerrados.
+
+6. **Scripts de generación y ajuste paramétrico (`build_*.py`)**:
+   - Algoritmos para el cálculo de perspectiva parabólica, cálculo trigonométrico del ribbon y renderizado de nodos de flujo de trabajo.

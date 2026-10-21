@@ -1,0 +1,264 @@
+  <script>
+    // El motor de efectos se inicializa una sola vez en build_site.py.
+    let previousFocus = null;
+    function toggleMobileMenu(force) {
+      const drawer=document.getElementById('mobileDrawer');
+      const toggle=document.getElementById('mobileMenuBtn');
+      if (!drawer || !toggle) return;
+      const open=typeof force==='boolean' ? force : !drawer.classList.contains('open');
+      drawer.classList.toggle('open',open);
+      toggle.setAttribute('aria-expanded',String(open));
+      toggle.setAttribute('aria-label',open?'Cerrar menú de navegación':'Abrir menú de navegación');
+    }
+    document.addEventListener('click',e=>{
+      if(!e.target.closest('.site-nav,.mobile-drawer')) toggleMobileMenu(false);
+    });
+    function copyPreparedRequest() {
+      const lead=window.openbreakPreparedLead;
+      if(!lead) return;
+      const content=`Solicitud de demo Open Break\nNombre: ${lead.name}\nEstudio: ${lead.studio}\nDisciplina: ${lead.discipline}\nTeléfono: ${lead.phone}`;
+      if(navigator.clipboard?.writeText) navigator.clipboard.writeText(content).then(()=>{
+        const msg=document.getElementById('feedbackMessage');
+        if(msg) msg.textContent='Solicitud copiada. Aún no se ha enviado a Open Break.';
+      }).catch(()=>window.prompt('Copia tu solicitud:',content));
+      else window.prompt('Copia tu solicitud:',content);
+    }
+    // 4. THE 3D CASCADING SOLUTIONS DECK & SATELLITES
+    let currentDeckIndex = 0;
+    const totalDeckCards = 4;
+
+    function updateDeckPositions() {
+      for (let i = 0; i < totalDeckCards; i++) {
+        const card = document.getElementById('deck-card-' + i);
+        if (card) {
+          card.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-3', 'discarding');
+          const relativePos = (i - currentDeckIndex + totalDeckCards) % totalDeckCards;
+          card.classList.add('pos-' + relativePos);
+        }
+      }
+      document.querySelectorAll('.deck-satellite').forEach((sat, idx) => {
+        sat.classList.toggle('active', idx === currentDeckIndex);
+      });
+    }
+
+    function cycleDeckStack() {
+      const topCard = document.getElementById('deck-card-' + currentDeckIndex);
+      if (!topCard) return;
+      topCard.classList.add('discarding');
+      setTimeout(() => {
+        currentDeckIndex = (currentDeckIndex + 1) % totalDeckCards;
+        updateDeckPositions();
+      }, 250);
+    }
+
+    function selectDeckCard(idx) {
+      currentDeckIndex = idx;
+      updateDeckPositions();
+    }
+
+    // 5. DEMO 1: CONCURRENCIA ATÓMICA (OB-05: Simulación interactiva transparente)
+    function runConcurrencyRace() {
+      const log = document.getElementById('concurrencyLog');
+      const hotBed = document.getElementById('hotBed');
+      const status = document.getElementById('bed8Status');
+      if (!log) return;
+      
+      log.innerHTML = '';
+      function addLine(text, cls = 'term-gray') {
+        const div = document.createElement('div');
+        div.className = 'terminal-line ' + cls;
+        div.textContent = text;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      addLine("⚡ [SIMULADOR DE CONCURRENCIA] Representando 3 solicitudes simultáneas...", "term-yellow");
+      addLine("[T0 + 0ms] Peticiones concurrentes recibidas para Cama 08:", "term-gray");
+      addLine("  → Req #8901: Alumna Camila M. (Pago con tarjeta en pasarela)", "term-gray");
+      addLine("  → Req #8902: Alumna Sofía R. (Consumo de 1 crédito en saldo)", "term-gray");
+      addLine("  → Req #8903: Alumna Lucía T. (Consumo de 1 crédito en saldo)", "term-gray");
+
+      setTimeout(() => {
+        addLine("[Paso 1] Bloqueo ilustrativo de PostgreSQL representado (Fila Cama 08):", "term-orange");
+        addLine("  > BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;", "term-yellow");
+        addLine("  > SELECT * FROM studio_slots WHERE slot_id = 'cama-08' FOR UPDATE;", "term-yellow");
+      }, 500);
+
+      setTimeout(() => {
+        addLine("[Paso 2] ASIGNACIÓN EXITOSA: Req #8901 (Camila M.)", "term-green");
+        addLine("  > INSERT INTO bookings (slot_id, user_id) VALUES ('cama-08', 'u-camila');", "term-yellow");
+        addLine("  > COMMIT;", "term-green");
+        
+        if (hotBed) {
+          hotBed.classList.remove('hot-contested');
+          hotBed.classList.add('occupied');
+        }
+        if (status) {
+          status.textContent = 'Ocupada (Camila)';
+          status.className = 'bed-status status-busy';
+        }
+      }, 1200);
+
+      setTimeout(() => {
+        addLine("[Paso 3] RECHAZO CONTROLADO: Req #8902 & #8903 (Cero sobrecupo)", "term-orange");
+        addLine("  > Excepción: SLOT_NOT_AVAILABLE. Despacho a waitlist determinista.", "term-gray");
+        addLine("  → Sofía R. inscrita como #1 en lista de espera autónoma.", "term-green");
+        addLine("  → Lucía T. inscrita como #2 en lista de espera autónoma.", "term-green");
+        addLine("✔ SIMULACIÓN: una plaza asignada, dos solicitudes no confirmadas.", "term-green");
+      }, 1900);
+    }
+
+    // 6. DEMO 2: WAITLIST CYCLE
+    function simulateWaitlistCycle() {
+      const steps = [
+        document.getElementById('step-1'),
+        document.getElementById('step-2'),
+        document.getElementById('step-3'),
+        document.getElementById('step-4')
+      ].filter(Boolean);
+      steps.forEach(s => s.classList.remove('active'));
+      
+      let cur = 0;
+      const interval = setInterval(() => {
+        steps.forEach(s => s.classList.remove('active'));
+        if (steps[cur]) steps[cur].classList.add('active');
+        cur++;
+        if (cur >= steps.length) clearInterval(interval);
+      }, 700);
+    }
+
+    // 7. DEMO 3: LEDGER INMUTABLE (OB-07: Invariante protegida contra inflado de saldo)
+    let credits = 8;
+    let refundableReservationsCount = 2; // iniciamos con 2 reservas históricas simuladas
+
+    function addLedgerMovement(type) {
+      const display = document.getElementById('creditsDisplay');
+      const list = document.getElementById('ledgerHistory');
+      const warning = document.getElementById('ledgerWarning');
+      if (!display || !list) return;
+
+      const item = document.createElement('div');
+      item.className = 'ledger-item';
+
+      if (type === 'book') {
+        if (credits <= 0) return;
+        credits--;
+        refundableReservationsCount++;
+        display.textContent = credits + ' CR';
+        item.innerHTML = `<span>Reserva Cama Reformer (Clase ${18 + refundableReservationsCount}:00)</span><span style="color: #EF4444; font-family: var(--font-mono); font-weight: 700;">-1 CR</span>`;
+        list.prepend(item);
+        if (warning) warning.style.display = 'none';
+      } else if (type === 'refund') {
+        if (refundableReservationsCount <= 0) {
+          if (warning) {
+            warning.style.display = 'block';
+            setTimeout(() => { warning.style.display = 'none'; }, 4000);
+          }
+          return;
+        }
+        credits++;
+        refundableReservationsCount--;
+        display.textContent = credits + ' CR';
+        item.innerHTML = '<span>Reverso de Reserva (Aviso >12h)</span><span style="color: var(--accent-green); font-family: var(--font-mono); font-weight: 700;">+1 CR</span>';
+        list.prepend(item);
+        if (warning) warning.style.display = 'none';
+      }
+    }
+
+    // 8. DEMO 4: CHECK-IN QR
+    function testQrScan() {
+      const state = document.getElementById('scannerState');
+      const title = document.getElementById('scannerTitle');
+      const desc = document.getElementById('scannerDesc');
+      if (!state) return;
+
+      state.style.borderColor = 'var(--accent-green)';
+      state.style.background = '#ECFDF5';
+      title.textContent = '¡Check-in Confirmado!';
+      desc.textContent = 'Alumna: Sofía R. · Cama Reformer #04 reservada. ¡Bienvenida!';
+
+      setTimeout(() => {
+        state.style.borderColor = 'var(--accent-orange)';
+        state.style.background = '#FFF8F5';
+        title.textContent = 'Lector QR Activo';
+        desc.textContent = 'Escanea el pase dinámico de la alumna desde su celular.';
+      }, 3500);
+    }
+
+    // 9. FAQ ACCORDION
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        const trigger = i.querySelector('.faq-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    // 10. MODAL DE DEMO Y PERSISTENCIA (OB-03, OB-14: Con escape, localStorage y UI real)
+    function openDemoModal() {
+      const modal = document.getElementById('demoModal');
+      const formContainer = document.getElementById('modalFormContainer');
+      const feedback = document.getElementById('modalFeedback');
+      if (modal) {
+        previousFocus = document.activeElement;
+        modal.style.display = 'flex';
+        setTimeout(()=>modal.querySelector('.modal-close')?.focus(), 0);
+        if (formContainer) formContainer.style.display = 'block';
+        if (feedback) feedback.classList.remove('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeDemoModal() {
+      const modal = document.getElementById('demoModal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        previousFocus?.focus?.();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDemoModal();
+    });
+
+    function handleDemoSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('demoName').value;
+      const studio = document.getElementById('demoStudio').value;
+      const discipline = document.getElementById('demoDiscipline').value;
+      const phone = document.getElementById('demoPhone').value;
+
+      window.openbreakPreparedLead = {name, studio, discipline, phone};
+
+      const formContainer = document.getElementById('modalFormContainer');
+      const feedback = document.getElementById('modalFeedback');
+      const msg = document.getElementById('feedbackMessage');
+      
+      if (formContainer) formContainer.style.display = 'none';
+      if (feedback) feedback.classList.add('active');
+      if (msg) {
+        msg.textContent = `Preparaste los datos de ${studio}. No se enviaron a Open Break. Puedes copiarlos y compartirlos cuando habilitemos el contacto.`;
+      }
+    }
+
+
+    // Cerrar por clic fuera del diálogo; no cerrar al pulsar dentro.
+    document.getElementById('demoModal')?.addEventListener('mousedown',function(e){if(e.target===this)closeDemoModal();});
+    document.getElementById('demoModal')?.addEventListener('keydown',function(e){
+      if(e.key!=='Tab') return;
+      const focusables=Array.from(this.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href]')).filter(x=>x.offsetParent!==null);
+      if(!focusables.length) return;
+      const first=focusables[0], last=focusables[focusables.length-1];
+      if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+      if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
+    });
+  </script>
+</body>
+</html>

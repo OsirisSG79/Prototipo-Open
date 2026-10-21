@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Break — Prototipo Interactivo de Producto & UX</title>
+  <style>
+    :root {
+      --primary: #0F172A;
+      --primary-accent: #4F46E5;
+      --accent-hover: #4338CA;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg); color: var(--text-main); line-height: 1.5; padding-bottom: 60px; }
+
+    /* Top Bar */
+    header {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; color: var(--primary); }
+    .brand-badge { background: #EEF2FF; color: var(--primary-accent); font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
+    
+    /* View Switcher */
+    .view-switcher {
+      display: flex;
+      background: #F1F5F9;
+      padding: 4px;
+      border-radius: 10px;
+      gap: 4px;
+    }
+    .switch-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+    .switch-btn.active {
+      background: #FFFFFF;
+      color: var(--primary-accent);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
+
+    /* Hero / Pitch Banner */
+    .pitch-banner {
+      background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+      color: white;
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .pitch-banner h1 { font-size: 1.35rem; margin-bottom: 6px; }
+    .pitch-banner p { color: #C7D2FE; font-size: 0.9rem; max-width: 650px; }
+    .metric-pills { display: flex; gap: 12px; }
+    .metric-pill { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 14px; text-align: center; }
+    .metric-pill span { display: block; font-size: 0.75rem; color: #A5B4FC; }
+    .metric-pill strong { font-size: 1.1rem; color: white; }
+
+    /* Views */
+    .view-content { display: none; }
+    .view-content.active { display: block; }
+
+    /* --- VISTA ALUMNO (Mobile Frame) --- */
+    .mobile-simulator-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+    .mobile-frame {
+      width: 100%;
+      max-width: 420px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 36px;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.12);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .mobile-notch {
+      height: 28px;
+      background: #FFFFFF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 8px;
+    }
+    .notch-pill { width: 90px; height: 18px; background: #0F172A; border-radius: 20px; }
+
+    .mobile-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .studio-info h3 { font-size: 1.05rem; font-weight: 700; color: #1E293B; }
+    .studio-info span { font-size: 0.8rem; color: var(--text-muted); }
+    .user-credits-badge {
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #A7F3D0;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .mobile-scroll { padding: 16px 18px; max-height: 580px; overflow-y: auto; }
+
+    /* Days selector */
+    .days-carousel {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .day-chip {
+      flex: 0 0 54px;
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      background: #FFFFFF;
+      transition: all 0.2s;
+    }
+    .day-chip.active {
+      background: var(--primary-accent);
+      color: white;
+      border-color: var(--primary-accent);
+    }
+    .day-chip span { display: block; font-size: 0.72rem; text-transform: uppercase; }
+    .day-chip strong { display: block; font-size: 1.05rem; margin-top: 2px; }
+
+    /* Class Cards */
+    .class-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+    }
+    .class-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .class-time { font-size: 0.95rem; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 8px; }
+    .class-duration { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
+    .class-title { font-size: 1rem; font-weight: 600; margin: 4px 0 2px; }
+    .class-meta { font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+    .class-actions { display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px dashed var(--border); }
+    .spots-indicator { font-size: 0.78rem; font-weight: 600; }
+    .spots-open { color: var(--success); }
+    .spots-warning { color: var(--warning); }
+    .spots-full { color: var(--danger); }
+
+    .btn-reserve {
+      background: var(--primary-accent);
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-reserve:hover { background: var(--accent-hover); }
+    .btn-waitlist {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Modal Checkout */
+    .modal-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      justify-content: flex-end;
+      align-items: flex-end;
+      z-index: 100;
+    }
+    .modal-sheet {
+      background: white;
+      width: 100%;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 -10px 25px rgba(0,0,0,0.15);
+      animation: slideUp 0.25s ease-out;
+    }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+    /* --- VISTA ADMINISTRACIÓN & RECEPCIÓN --- */
+    .admin-grid { display: grid; grid-template-columns: 2fr 1.1fr; gap: 20px; }
+    @media (max-width: 900px) { .admin-grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .card-title { font-size: 1.05rem; font-weight: 700; color: #1E293B; }
+
+    .table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .table th { text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; }
+    .table td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .badge-success { background: #ECFDF5; color: #065F46; }
+    .badge-warning { background: #FFFBEB; color: #B45309; }
+    .badge-secondary { background: #F1F5F9; color: #475569; }
+
+    /* Check-in row buttons */
+    .btn-action-small {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-action-small:hover { background: #F8FAFC; border-color: #CBD5E1; }
+    .btn-checkin-done { background: #ECFDF5; color: #065F46; border-color: #A7F3D0; }
+
+    /* Rules Banner */
+    .rules-box {
+      background: #F8FAFC;
+      border: 1px dashed #CBD5E1;
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 12px;
+      font-size: 0.82rem;
+      color: #475569;
+    }
+    .rules-box strong { color: #0F172A; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #4F46E5;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Open Break
+      <span class="brand-badge">MVP Pilot 2026</span>
+    </div>
+
+    <div class="view-switcher">
+      <button class="switch-btn active" onclick="switchView('student')">📱 Vista Alumno (Reserva)</button>
+      <button class="switch-btn" onclick="switchView('admin')">🖥️ Panel Estudio (Recepción & Reglas)</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Top Banner -->
+    <div class="pitch-banner">
+      <div>
+        <h1>Prototipo UX & Flujos de Operación: Open Break</h1>
+        <p>Diseñado para erradicar el sobrecupo físico, automatizar créditos y operar con 0% de comisión propia sobre transacciones del estudio.</p>
+      </div>
+      <div class="metric-pills">
+        <div class="metric-pill">
+          <span>Sobrecupo Garantizado</span>
+          <strong>0% (Atómico)</strong>
+        </div>
+        <div class="metric-pill">
+          <span>Comisión Plataforma</span>
+          <strong>0% (Tarifa Fija)</strong>
+        </div>
+        <div class="metric-pill">
+          <span>Tiempo de Reserva</span>
+          <strong>< 15 segs</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 1. VISTA ALUMNO (Mobile Web Simulator) -->
+    <!-- ========================================== -->
+    <div id="view-student" class="view-content active">
+      <div style="text-align: center; margin-bottom: 14px;">
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Simulación de la experiencia web móvil: el alumno accede mediante enlace de marca sin descargar aplicaciones.
+        </p>
+      </div>
+
+      <div class="mobile-simulator-wrapper">
+        <div class="mobile-frame">
+          <div class="mobile-notch"><div class="notch-pill"></div></div>
+
+          <div class="mobile-header">
+            <div class="studio-info">
+              <h3>Sol & Luna Pilates Boutique</h3>
+              <span>Sucursal Roma Norte · CDMX</span>
+            </div>
+            <div class="user-credits-badge" id="studentCreditsBadge">
+              <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>
+              <span id="creditCount">3 créditos</span>
+            </div>
+          </div>
+
+          <div class="mobile-scroll">
+            <!-- Day Chips -->
+            <div class="days-carousel">
+              <div class="day-chip active" onclick="selectDay(this, 'Hoy, 20 Oct')">
+                <span>Hoy</span>
+                <strong>20</strong>
+              </div>
+              <div class="day-chip" onclick="selectDay(this, 'Mié, 21 Oct')">
+                <span>Mié</span>
+                <strong>21</strong>
+              </div>
+              <div class="day-chip" onclick="selectDay(this, 'Jue, 22 Oct')">
+                <span>Jue</span>
+                <strong>22</strong>
+              </div>
+              <div class="day-chip" onclick="selectDay(this, 'Vie, 23 Oct')">
+                <span>Vie</span>
+                <strong>23</strong>
+              </div>
+              <div class="day-chip" onclick="selectDay(this, 'Sáb, 24 Oct')">
+                <span>Sáb</span>
+                <strong>24</strong>
+              </div>
+            </div>
+
+            <!-- List of Classes for Today -->
+            <div id="classList">
+              <!-- Clase 1: Disponible -->
+              <div class="class-card" id="card-clase-1">
+                <div class="class-time">
+                  07:00 AM
+                  <span class="class-duration">· 50 min · Sala Reformer 1</span>
+                </div>
+                <div class="class-title">Reformer Flow Intermedio</div>
+                <div class="class-meta">
+                  <span>Instructor: <strong>Mariana Ramos</strong></span>
+                </div>
+                <div class="class-actions">
+                  <span class="spots-indicator spots-open" id="spots-1">2 de 8 cupos libres</span>
+                  <button class="btn-reserve" onclick="reserveClass(1, 'Reformer Flow Intermedio', '07:00 AM')">Reservar con 1 crédito</button>
+                </div>
+              </div>
+
+              <!-- Clase 2: Casi Llena -->
+              <div class="class-card" id="card-clase-2">
+                <div class="class-time">
+                  09:00 AM
+                  <span class="class-duration">· 50 min · Sala Reformer 1</span>
+                </div>
+                <div class="class-title">Cadillac & Core Sculpt</div>
+                <div class="class-meta">
+                  <span>Instructor: <strong>Carlos Vidal</strong></span>
+                </div>
+                <div class="class-actions">
+                  <span class="spots-indicator spots-warning" id="spots-2">Último cupo disponible</span>
+                  <button class="btn-reserve" onclick="reserveClass(2, 'Cadillac & Core Sculpt', '09:00 AM')">Reservar con 1 crédito</button>
+                </div>
+              </div>
+
+              <!-- Clase 3: Llena con Waitlist -->
+              <div class="class-card" id="card-clase-3">
+                <div class="class-time">
+                  06:30 PM
+                  <span class="class-duration">· 50 min · Sala Mat & Jump</span>
+                </div>
+                <div class="class-title">Power Reformer Sunset</div>
+                <div class="class-meta">
+                  <span>Instructor: <strong>Sofía Méndez</strong></span>
+                </div>
+                <div class="class-actions">
+                  <span class="spots-indicator spots-full">Clase llena (8/8)</span>
+                  <button class="btn-waitlist" onclick="joinWaitlist(3, 'Power Reformer Sunset')">Unirse a Waitlist (#1)</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Historial de reservas del alumno -->
+            <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 14px;">
+              <h4 style="font-size: 0.9rem; margin-bottom: 8px;">Tus Próximas Reservas</h4>
+              <div id="studentBookings">
+                <p style="font-size: 0.78rem; color: var(--text-muted); font-style: italic;">No tienes clases agendadas hoy.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sheet modal de Confirmación -->
+          <div class="modal-overlay" id="bookingModal">
+            <div class="modal-sheet">
+              <h3 style="font-size: 1.1rem; margin-bottom: 6px;" id="modalClassTitle">Confirmar Reserva</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;" id="modalClassTime"></p>
+              
+              <div style="background: #F1F5F9; border-radius: 8px; padding: 12px; font-size: 0.8rem; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                  <span>Costo en créditos:</span>
+                  <strong>1 clase</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Saldo restante tras reserva:</span>
+                  <strong id="modalRemainingCredits">2 créditos</strong>
+                </div>
+              </div>
+
+              <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 14px; background: #FFFBEB; padding: 8px; border-radius: 6px; border: 1px solid #FDE68A;">
+                ⏰ <strong>Regla de cancelación justa:</strong> Cancela hasta 6 hrs antes de la sesión para recuperar tu crédito íntegro.
+              </div>
+
+              <div style="display: flex; gap: 8px;">
+                <button style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: white; font-weight: 600; font-size: 0.85rem; cursor: pointer;" onclick="closeModal()">Volver</button>
+                <button style="flex: 2; padding: 10px; border-radius: 8px; border: none; background: var(--primary-accent); color: white; font-weight: 600; font-size: 0.85rem; cursor: pointer;" onclick="executeBooking()">Confirmar Reserva</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- 2. VISTA ADMINISTRACIÓN & RECEPCIÓN -->
+    <!-- ========================================== -->
+    <div id="view-admin" class="view-content">
+      <div class="admin-grid">
+        
+        <!-- Columna Izquierda: Operación diaria & Check-in -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Check-in de Recepción (Hoy)</h3>
+                <span style="font-size: 0.82rem; color: var(--text-muted);">Clase en curso: 07:00 AM · Reformer Flow Intermedio (Mariana Ramos)</span>
+              </div>
+              <span class="badge badge-success">Sede Roma Norte</span>
+            </div>
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Alumno</th>
+                  <th>Paquete Activo</th>
+                  <th>Hora Reserva</th>
+                  <th>Estado</th>
+                  <th>Acción Rápida</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceTable">
+                <tr>
+                  <td><strong>Andrea Legarreta</strong></td>
+                  <td>Pack 10 Clases (Exp. 15 Nov)</td>
+                  <td>06:14 AM</td>
+                  <td><span class="badge badge-success" id="status-1">Confirmada</span></td>
+                  <td><button class="btn-action-small btn-checkin-done" onclick="markAttendance(this, 'status-1')">✓ Check-in</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Rodrigo Soto</strong></td>
+                  <td>Pack 5 Clases (Exp. 30 Oct)</td>
+                  <td>Ayer 08:30 PM</td>
+                  <td><span class="badge badge-warning" id="status-2">Pendiente</span></td>
+                  <td><button class="btn-action-small" onclick="markAttendance(this, 'status-2')">Registrar Asistencia</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Valeria Morales</strong></td>
+                  <td>Membresía Mensual</td>
+                  <td>Ayer 09:12 PM</td>
+                  <td><span class="badge badge-warning" id="status-3">Pendiente</span></td>
+                  <td><button class="btn-action-small" onclick="markAttendance(this, 'status-3')">Registrar Asistencia</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Monitor de Concurrencia y Transacciones Atómicas -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Bitácora de Eventos e Integridad (Audit Log)</h3>
+              <span class="badge badge-secondary">Simulación Backend PostgreSQL / FastAPI</span>
+            </div>
+            
+            <div style="background: #0F172A; color: #38BDF8; font-family: monospace; font-size: 0.8rem; padding: 14px; border-radius: 8px; line-height: 1.6; max-height: 180px; overflow-y: auto;" id="auditTerminal">
+              <div>[SYSTEM] Multi-tenant context initialized for tenant_id: studio_roma_01</div>
+              <div>[DB_LOCK] Row-level lock (FOR UPDATE) acquired on class_session_id=1</div>
+              <div>[CREDIT_ENGINE] Account 00492: Deducted 1 credit. Remaining: 3. Expiry untouched.</div>
+              <div>[STRIPE_WEBHOOK] 200 OK: PaymentIntent pi_384x verified with idempotency key.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Configuración de Reglas y Métricas de Negocio -->
+        <div>
+          <div class="card">
+            <h3 class="card-title" style="margin-bottom: 12px;">Reglas del Estudio Fundador</h3>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
+              Configuración sin código que protege el margen y la puntualidad del instructor.
+            </p>
+
+            <div style="margin-bottom: 14px;">
+              <label style="display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 4px;">Ventana de Cancelación Oportuna</label>
+              <select style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.85rem;">
+                <option selected>6 horas antes (Recomendado boutiques)</option>
+                <option>12 horas antes</option>
+                <option>2 horas antes</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom: 14px;">
+              <label style="display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 4px;">Política de Sobrecupo y Lista de Espera</label>
+              <select style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.85rem;">
+                <option selected>Automática (Promueve al liberar cupo)</option>
+                <option>Manual con confirmación vía WhatsApp</option>
+              </select>
+            </div>
+
+            <div class="rules-box">
+              <strong>Impacto Financiero de la Regla:</strong>
+              <p style="margin-top: 4px;">Si un alumno cancela con menos de 6 horas de anticipación, el cupo se reabre para la lista de espera pero el crédito <strong>no se reintegra</strong>, protegiendo los honorarios del profesor ($150-$250/sesión).</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title" style="margin-bottom: 10px;">Comisiones de Pasarela vs Plataforma</h3>
+            <div style="font-size: 0.82rem; color: #475569; line-height: 1.6;">
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 6px 0;">
+                <span>Comisión Open Break:</span>
+                <strong style="color: var(--success);">0% (Cuota fija)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 6px 0;">
+                <span>Stripe México (Directo):</span>
+                <span>3.6% + $3.00 MXN + IVA</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                <span>Ahorro mensual vs Fitio (estudio con $30k cobros):</span>
+                <strong style="color: #4F46E5;">~$1,200 MXN/mes</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let studentCredits = 3;
+    let pendingBooking = null;
+    let activeBookings = [];
+
+    // Base de datos de clases por día (OB-08)
+    const scheduleByDay = {
+      'Hoy': [
+        { id: 1, title: 'Reformer Foundations', instructor: 'Sofía Valdés', time: '08:00 - 08:50', spots: 2, total: 8 },
+        { id: 2, title: 'Power Flow Reformer', instructor: 'Camila Morales', time: '09:30 - 10:20', spots: 1, total: 8 },
+        { id: 3, title: 'Reformer Jumpboard & Cardio', instructor: 'Mateo Rivas', time: '18:00 - 18:50', spots: 3, total: 8 }
+      ],
+      'Mañana': [
+        { id: 4, title: 'Classic Reformer Alignment', instructor: 'Sofía Valdés', time: '07:30 - 08:20', spots: 4, total: 8 },
+        { id: 5, title: 'High Intensity Athletic Pilates', instructor: 'Mateo Rivas', time: '17:30 - 18:20', spots: 2, total: 8 }
+      ],
+      'Mié 22': [
+        { id: 6, title: 'Reformer & Mat Mobility', instructor: 'Camila Morales', time: '08:30 - 09:20', spots: 3, total: 8 }
+      ],
+      'Jue 23': [
+        { id: 7, title: 'Power Core Reformer', instructor: 'Sofía Valdés', time: '09:00 - 09:50', spots: 1, total: 8 }
+      ],
+      'Vie 24': [
+        { id: 8, title: 'Restorative Stretch & Springs', instructor: 'Camila Morales', time: '18:00 - 18:50', spots: 5, total: 8 }
+      ]
+    };
+
+    function switchView(viewName) {
+      document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.switch-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById('view-' + viewName).classList.add('active');
+      if (viewName === 'student') {
+        document.querySelectorAll('.switch-btn')[0].classList.add('active');
+      } else {
+        document.querySelectorAll('.switch-btn')[1].classList.add('active');
+      }
+    }
+
+    function selectDay(element, dayLabel) {
+      document.querySelectorAll('.day-chip').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+      logAudit(`[UX] Filtro de fecha cambiado a: ${dayLabel}`);
+      renderClassList(dayLabel);
+    }
+
+    function renderClassList(dayLabel) {
+      const container = document.getElementById('classListContainer') || document.querySelector('.classes-list');
+      if (!container) return;
+      const classes = scheduleByDay[dayLabel] || scheduleByDay['Hoy'];
+      
+      container.innerHTML = classes.map(c => {
+        const isBooked = activeBookings.some(b => b.id === c.id);
+        const spotsText = isBooked ? 'Ya estás inscrita' : `${c.spots} de ${c.total} cupos libres`;
+        const btnText = isBooked ? 'Inscrita' : 'Reservar Cama';
+        const btnDisabled = isBooked ? 'disabled style="background: #E2E8F0; color: #64748B; cursor: not-allowed;"' : '';
+        return `
+          <div class="class-card" id="card-clase-${c.id}">
+            <div class="class-info">
+              <span class="spots-indicator ${c.spots <= 1 ? 'spots-warning' : 'spots-available'}" id="spots-${c.id}">${spotsText}</span>
+              <div class="class-title">${c.title}</div>
+              <div class="class-meta">
+                <span>🕒 ${c.time}</span>
+                <span>👤 ${c.instructor}</span>
+                <span>🏠 Sala Reformer</span>
+              </div>
+            </div>
+            <button class="reserve-btn" ${btnDisabled} onclick="reserveClass(${c.id}, '${c.title}', '${c.time}')">${btnText}</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function reserveClass(classId, title, time) {
+      if (studentCredits <= 0) {
+        alert("No tienes créditos disponibles en tu cuenta. Compra un paquete para reservar.");
+        return;
+      }
+      pendingBooking = { id: classId, title: title, time: time };
+      document.getElementById('modalClassTitle').innerText = title;
+      document.getElementById('modalClassTime').innerText = `Hoy · ${time} · Sala Reformer`;
+      document.getElementById('modalRemainingCredits').innerText = `${studentCredits - 1} créditos`;
+      document.getElementById('bookingModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('bookingModal').style.display = 'none';
+      pendingBooking = null;
+    }
+
+    function executeBooking() {
+      if (!pendingBooking) return;
+      
+      // Prevenir doble reserva (OB-08)
+      if (activeBookings.some(b => b.id === pendingBooking.id)) {
+        alert("Ya cuentas con una reserva activa para esta misma clase.");
+        closeModal();
+        return;
+      }
+
+      studentCredits--;
+      document.getElementById('creditCount').innerText = `${studentCredits} créditos`;
+      activeBookings.push({ ...pendingBooking });
+
+      // Render lista acumulada de reservas
+      renderStudentBookings();
+
+      // Refrescar listado del día activo
+      const activeDay = document.querySelector('.day-chip.active')?.textContent.trim() || 'Hoy';
+      renderClassList(activeDay);
+
+      logAudit(`[RESERVA_EXITOSA] Alumno reservó '${pendingBooking.title}'. Créditos restantes: ${studentCredits}`);
+      closeModal();
+      alert(`¡Reserva confirmada con éxito! Cama asignada en sala.`);
+    }
+
+    function renderStudentBookings() {
+      const bookingsContainer = document.getElementById('studentBookings');
+      if (!bookingsContainer) return;
+
+      if (activeBookings.length === 0) {
+        bookingsContainer.innerHTML = '<div style="font-size: 0.8rem; color: var(--text-muted);">No tienes reservas activas por el momento.</div>';
+        return;
+      }
+
+      bookingsContainer.innerHTML = activeBookings.map(b => `
+        <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 600; font-size: 0.82rem; color: #1E293B;">${b.title}</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">Sesión · ${b.time}</div>
+          </div>
+          <button style="border: none; background: #FEE2E2; color: #991B1B; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; font-weight: 600; cursor: pointer;" onclick="cancelBookingById(${b.id}, '${b.title}')">Cancelar</button>
+        </div>
+      `).join('');
+    }
+
+    function cancelBookingById(classId, title) {
+      if (confirm(`¿Deseas cancelar tu reserva para '${title}'? Al ser con anticipación reglamentaria, tu crédito se reembolsará automáticamente.`)) {
+        activeBookings = activeBookings.filter(b => b.id !== classId);
+        studentCredits++;
+        document.getElementById('creditCount').innerText = `${studentCredits} créditos`;
+        renderStudentBookings();
+        
+        const activeDay = document.querySelector('.day-chip.active')?.textContent.trim() || 'Hoy';
+        renderClassList(activeDay);
+
+        logAudit(`[CANCELACION] Reserva cancelada para '${title}'. Crédito restituido.`);
+      }
+    }
+
+    function cancelBooking(buttonEl, title) {
+      if (confirm(`¿Deseas cancelar tu reserva para '${title}'? Al ser con más de 6 hrs de anticipación, tu crédito se reembolsará automáticamente.`)) {
+        studentCredits++;
+        document.getElementById('creditCount').innerText = `${studentCredits} créditos`;
+        buttonEl.parentElement.remove();
+        logAudit(`[CANCELACIÓN_CONFIRMADA] Cupo liberado oportunamente. Reintegrado 1 crédito. Balance: ${studentCredits}`);
+      }
+    }
+
+    function joinWaitlist(classId, title) {
+      alert(`Te has registrado en la Lista de Espera de '${title}' (Posición #1). Si algún alumno cancela, se te asignará el lugar automáticamente.`);
+      logAudit(`[WAITLIST] Alumno añadido a lista de espera en clase_id=${classId}. Posición 1.`);
+    }
+
+    function markAttendance(btn, statusId) {
+      const statusSpan = document.getElementById(statusId);
+      statusSpan.innerText = "Asistió (Check-in)";
+      statusSpan.className = "badge badge-success";
+      btn.classList.add('btn-checkin-done');
+      btn.innerText = "✓ Asistió";
+      logAudit(`[CHECK-IN] Alumno confirmado en recepción de sala.`);
+    }
+
+    function logAudit(message) {
+      const terminal = document.getElementById('auditTerminal');
+      if (terminal) {
+        const line = document.createElement('div');
+        line.innerText = message;
+        terminal.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight;
+      }
+    }
+  </script>
+</body>
+</html>
