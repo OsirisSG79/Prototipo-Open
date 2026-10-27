@@ -1,0 +1,69 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "Open Break Studio Asset Pipeline v8",
+    "copyright": "Open Break Boutique Studio OS © 2026"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "LuxuryReformerStudioScene",
+      "nodes": [0]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "ReformerRoot",
+      "children": [1, 2, 3, 4]
+    },
+    {
+      "name": "WalnutStringerFrame",
+      "translation": [0, 0.56, 0]
+    },
+    {
+      "name": "ArticulatedCarriage",
+      "translation": [0, 0.88, 0]
+    },
+    {
+      "name": "TensionSpringAssembly",
+      "translation": [0, 0.69, 1.42]
+    },
+    {
+      "name": "PulleyTowerSystem",
+      "translation": [0, 1.24, -2.25]
+    }
+  ],
+  "materials": [
+    {
+      "name": "AmericanWalnutPBR",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [0.37, 0.23, 0.13, 1.0],
+        "metallicFactor": 0.02,
+        "roughnessFactor": 0.48
+      }
+    },
+    {
+      "name": "BrushedChromeSteel",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [0.73, 0.72, 0.70, 1.0],
+        "metallicFactor": 0.85,
+        "roughnessFactor": 0.22
+      }
+    },
+    {
+      "name": "FinePipedLeather",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [0.13, 0.14, 0.13, 1.0],
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.85
+      }
+    }
+  ],
+  "extensionsUsed": [],
+  "extras": {
+    "specStatus": "active_contract",
+    "proceduralMeshCompliant": true,
+    "targetPolycount": 4800,
+    "fallbackPath": "assets/optimized/studio_hero.webp"
+  }
+}

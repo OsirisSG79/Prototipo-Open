@@ -1,0 +1,533 @@
+  <script>
+    // El motor de efectos se inicializa una sola vez en build_site.py.
+    let previousFocus = null;
+    function toggleMobileMenu(force) {
+      const drawer=document.getElementById('mobileDrawer');
+      const toggle=document.getElementById('mobileMenuBtn');
+      if (!drawer || !toggle) return;
+      const open=typeof force==='boolean' ? force : !drawer.classList.contains('open');
+      drawer.classList.toggle('open',open);
+      toggle.setAttribute('aria-expanded',String(open));
+      toggle.setAttribute('aria-label',open?'Cerrar menú de navegación':'Abrir menú de navegación');
+    }
+    document.addEventListener('click',e=>{
+      if(!e.target.closest('.site-nav,.mobile-drawer')) toggleMobileMenu(false);
+    });
+    function copyPreparedRequest() {
+      const lead=window.openbreakPreparedLead;
+      if(!lead) return;
+      const content=`Solicitud de demo Open Break\nNombre: ${lead.name}\nEstudio: ${lead.studio}\nDisciplina: ${lead.discipline}\nTeléfono: ${lead.phone}`;
+      if(navigator.clipboard?.writeText) navigator.clipboard.writeText(content).then(()=>{
+        const msg=document.getElementById('feedbackMessage');
+        if(msg) msg.textContent='Solicitud copiada. Aún no se ha enviado a Open Break.';
+      }).catch(()=>window.prompt('Copia tu solicitud:',content));
+      else window.prompt('Copia tu solicitud:',content);
+    }
+    // 4. THE 3D CASCADING SOLUTIONS DECK & SATELLITES
+    let currentDeckIndex = 0;
+    const totalDeckCards = 4;
+
+    function updateDeckPositions() {
+      for (let i = 0; i < totalDeckCards; i++) {
+        const card = document.getElementById('deck-card-' + i);
+        if (card) {
+          card.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-3', 'discarding');
+          const relativePos = (i - currentDeckIndex + totalDeckCards) % totalDeckCards;
+          card.classList.add('pos-' + relativePos);
+        }
+      }
+      document.querySelectorAll('.deck-satellite').forEach((sat, idx) => {
+        sat.classList.toggle('active', idx === currentDeckIndex);
+      });
+    }
+
+    function cycleDeckStack() {
+      const topCard = document.getElementById('deck-card-' + currentDeckIndex);
+      if (!topCard) return;
+      topCard.classList.add('discarding');
+      setTimeout(() => {
+        currentDeckIndex = (currentDeckIndex + 1) % totalDeckCards;
+        updateDeckPositions();
+      }, 250);
+    }
+
+    
+    // UX-06 Melius Style: Reactive Bézier wire calculator linking satellites to central deck
+    function updateDeckWires(activeIdx = 0) {
+      const arena = document.getElementById('solutionsDeckArena');
+      const container = document.querySelector('.deck-perspective-container');
+      if (!arena || !container || window.innerWidth <= 900) return;
+
+      const arenaRect = arena.getBoundingClientRect();
+      const contRect = container.getBoundingClientRect();
+      const targetX = contRect.left + contRect.width / 2 - arenaRect.left;
+      const targetY = contRect.top + contRect.height / 2 - arenaRect.top;
+
+      [0, 1, 2, 3].forEach(i => {
+        const sat = document.getElementById('sat-' + i);
+        const wire = document.getElementById('wire-' + i);
+        if (!sat || !wire) return;
+
+        const satRect = sat.getBoundingClientRect();
+        const startX = satRect.left + satRect.width / 2 - arenaRect.left;
+        const startY = satRect.top + satRect.height / 2 - arenaRect.top;
+
+        // Cubic Bézier curve with horizontal or vertical bias
+        const dx = targetX - startX;
+        const dy = targetY - startY;
+        const cp1x = startX + dx * 0.5;
+        const cp1y = startY;
+        const cp2x = startX + dx * 0.5;
+        const cp2y = targetY;
+
+        wire.setAttribute('d', `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`);
+        if (i === activeIdx) {
+          wire.classList.add('active');
+        } else {
+          wire.classList.remove('active');
+        }
+      });
+    }
+
+    window.addEventListener('resize', () => { updateDeckWires(window.currentDeckIndex || 0); });
+
+    function selectDeckCard(idx) {
+      currentDeckIndex = idx;
+      updateDeckPositions();
+    }
+
+    // 5. DEMO 1: CONCURRENCIA ATÓMICA (OB-05: Simulación interactiva transparente)
+    function runConcurrencyRace() {
+      const log = document.getElementById('concurrencyLog');
+      const hotBed = document.getElementById('hotBed');
+      const status = document.getElementById('bed8Status');
+      if (!log) return;
+      
+      log.innerHTML = '';
+      function addLine(text, cls = 'term-gray') {
+        const div = document.createElement('div');
+        div.className = 'terminal-line ' + cls;
+        div.textContent = text;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      addLine("⚡ [SIMULADOR DE CONCURRENCIA] Representando 3 solicitudes simultáneas...", "term-yellow");
+      addLine("[T0 + 0ms] Peticiones concurrentes recibidas para Cama 08:", "term-gray");
+      addLine("  → Req #8901: Alumna Camila M. (Pago con tarjeta en pasarela)", "term-gray");
+      addLine("  → Req #8902: Alumna Sofía R. (Consumo de 1 crédito en saldo)", "term-gray");
+      addLine("  → Req #8903: Alumna Lucía T. (Consumo de 1 crédito en saldo)", "term-gray");
+
+      setTimeout(() => {
+        addLine("[Paso 1] Bloqueo ilustrativo de PostgreSQL representado (Fila Cama 08):", "term-orange");
+        addLine("  > BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;", "term-yellow");
+        addLine("  > SELECT * FROM studio_slots WHERE slot_id = 'cama-08' FOR UPDATE;", "term-yellow");
+      }, 500);
+
+      setTimeout(() => {
+        addLine("[Paso 2] ASIGNACIÓN EXITOSA: Req #8901 (Camila M.)", "term-green");
+        addLine("  > INSERT INTO bookings (slot_id, user_id) VALUES ('cama-08', 'u-camila');", "term-yellow");
+        addLine("  > COMMIT;", "term-green");
+        
+        if (hotBed) {
+          hotBed.classList.remove('hot-contested');
+          hotBed.classList.add('occupied');
+        }
+        if (status) {
+          status.textContent = 'Ocupada (Camila)';
+          status.className = 'bed-status status-busy';
+        }
+      }, 1200);
+
+      setTimeout(() => {
+        addLine("[Paso 3] RECHAZO CONTROLADO: Req #8902 & #8903 (Cero sobrecupo)", "term-orange");
+        addLine("  > Excepción: SLOT_NOT_AVAILABLE. Despacho a waitlist determinista.", "term-gray");
+        addLine("  → Sofía R. inscrita como #1 en lista de espera autónoma.", "term-green");
+        addLine("  → Lucía T. inscrita como #2 en lista de espera autónoma.", "term-green");
+        addLine("✔ SIMULACIÓN: una plaza asignada, dos solicitudes no confirmadas.", "term-green");
+      }, 1900);
+    }
+
+    // 6. DEMO 2: WAITLIST CYCLE
+    function simulateWaitlistCycle() {
+      const steps = [
+        document.getElementById('step-1'),
+        document.getElementById('step-2'),
+        document.getElementById('step-3'),
+        document.getElementById('step-4')
+      ].filter(Boolean);
+      steps.forEach(s => s.classList.remove('active'));
+      
+      let cur = 0;
+      const interval = setInterval(() => {
+        steps.forEach(s => s.classList.remove('active'));
+        if (steps[cur]) steps[cur].classList.add('active');
+        cur++;
+        if (cur >= steps.length) clearInterval(interval);
+      }, 700);
+    }
+
+    // 7. DEMO 3: LEDGER INMUTABLE (V8.1.5: Real Transaction History & Unambiguous ID Selector)
+    function renderLedgerHistory() {
+      const store = window.OpenBreakStore;
+      const list = document.getElementById('ledgerHistory');
+      const display = document.getElementById('creditsDisplay');
+      const selector = document.getElementById('ledgerBookingSelector');
+      if (!list || !store) return;
+
+      list.innerHTML = '';
+      const txs = store.transactions || [];
+      // Render transactions in reverse chronological order
+      [...txs].reverse().forEach(tx => {
+        const item = document.createElement('div');
+        item.className = 'ledger-item';
+        item.style.display = 'flex';
+        item.style.justifyContent = 'space-between';
+        item.style.alignItems = 'center';
+        item.style.padding = '8px 0';
+        item.style.borderBottom = '1px solid rgba(0,0,0,0.05)';
+
+        const isPositive = tx.amount > 0;
+        const color = isPositive ? 'var(--accent-green)' : '#EF4444';
+        const sign = isPositive ? '+' : '';
+        const txShortId = tx.id ? tx.id.slice(-8) : 'tx_demo';
+        const studentLabel = tx.studentName ? ` · ${tx.studentName}` : '';
+
+        item.innerHTML = `
+          <div>
+            <div style="font-weight: 600; font-size: 0.85rem; color: var(--text-black);">${tx.description}${studentLabel}</div>
+            <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #A1A1AA;">ID: ${txShortId} · Ref: ${tx.refBookingId || 'N/A'}</div>
+          </div>
+          <span style="color: ${color}; font-family: var(--font-mono); font-weight: 700; font-size: 0.88rem;">${sign}${tx.amount} CR</span>
+        `;
+        list.appendChild(item);
+      });
+
+      if (display) display.textContent = store.credits + ' CR';
+
+      // P0-02 (AUD-013) Fix: Update explicit refundable booking selector
+      if (selector) {
+        const prevVal = selector.value;
+        selector.innerHTML = '';
+        
+        // Find all active refundable bookings
+        const activeRefundable = [];
+        if (store.bookingsById) {
+          for (const b of store.bookingsById.values()) {
+            if ((b.status === 'CONFIRMED' || b.status === 'CONFIRMED_FROM_WAITLIST') && b.refundable !== false) {
+              activeRefundable.push(b);
+            }
+          }
+        }
+
+        if (activeRefundable.length === 0) {
+          const opt = document.createElement('option');
+          opt.value = '';
+          opt.textContent = '(Sin reservas activas reembolsables)';
+          selector.appendChild(opt);
+          selector.disabled = true;
+        } else {
+          selector.disabled = false;
+          activeRefundable.forEach((b, idx) => {
+            const opt = document.createElement('option');
+            opt.value = b.bookingId;
+            opt.textContent = `${b.studentName || 'Alumna'} — ${b.classId} (${b.bookingId.slice(-8)})`;
+            selector.appendChild(opt);
+          });
+          if (prevVal && activeRefundable.some(b => b.bookingId === prevVal)) {
+            selector.value = prevVal;
+          } else {
+            selector.value = activeRefundable[activeRefundable.length - 1].bookingId;
+          }
+        }
+      }
+    }
+
+    function addLedgerMovement(type) {
+      const store = window.OpenBreakStore;
+      const warning = document.getElementById('ledgerWarning');
+      const selector = document.getElementById('ledgerBookingSelector');
+      if (!store) return;
+
+      if (type === 'book') {
+        const res = store.ledgerBookSpot();
+        if (!res.success) return;
+        if (warning) warning.style.display = 'none';
+      } else if (type === 'refund') {
+        // P0-02 (AUD-013) Fix: Pass targeted bookingId explicitly from UI selector
+        const targetId = selector?.value || null;
+        const res = store.ledgerRefundSpot(targetId);
+        if (!res.success) {
+          if (warning) {
+            if (res.reason === 'ambiguous_refund_target') {
+              warning.textContent = 'ℹ Invariante protegida: Selección ambigua. Especifica la reserva a reembolsar.';
+            } else {
+              warning.textContent = 'ℹ Invariante protegida: No es posible revertir sin una reserva activa previa.';
+            }
+            warning.style.display = 'block';
+            setTimeout(() => { warning.style.display = 'none'; }, 4000);
+          }
+          return;
+        }
+        if (warning) warning.style.display = 'none';
+      }
+      renderLedgerHistory();
+      if (typeof announceToScreenReader === 'function') {
+        announceToScreenReader(`Transacción contable registrada: ${type === 'book' ? 'Reserva -1 crédito' : 'Reverso +1 crédito'}. Saldo actual: ${store.credits} créditos.`);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => updateDeckWires(0), 100);
+      renderLedgerHistory();
+    });
+    window.addEventListener('openbreak:state-changed', () => {
+      renderLedgerHistory();
+    });
+
+    // 8. DEMO 4: CHECK-IN QR
+    function testQrScan() {
+      const state = document.getElementById('scannerState');
+      const title = document.getElementById('scannerTitle');
+      const desc = document.getElementById('scannerDesc');
+      if (!state) return;
+
+      state.style.borderColor = 'var(--accent-green)';
+      state.style.background = '#ECFDF5';
+      title.textContent = '¡Check-in Confirmado!';
+      desc.textContent = 'Alumna: Sofía R. · Cama Reformer #04 reservada. ¡Bienvenida!';
+
+      setTimeout(() => {
+        state.style.borderColor = 'var(--accent-orange)';
+        state.style.background = '#FFF8F5';
+        title.textContent = 'Lector QR Activo';
+        desc.textContent = 'Escanea el pase dinámico de la alumna desde su celular.';
+      }, 3500);
+    }
+
+    // 9. FAQ ACCORDION
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('is-open') || item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('is-open');
+        i.classList.remove('open');
+        const trigger = i.querySelector('.faq-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('is-open');
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    // 10. MODAL DE DEMO Y PERSISTENCIA (OB-03, OB-14: Con escape, localStorage y UI real)
+    function openDemoModal() {
+      const modal = document.getElementById('demoModal');
+      const formContainer = document.getElementById('modalFormContainer');
+      const feedback = document.getElementById('modalFeedback');
+      if (modal) {
+        previousFocus = document.activeElement;
+        modal.style.display = 'flex';
+        setTimeout(()=>modal.querySelector('.modal-close')?.focus(), 0);
+        if (formContainer) formContainer.style.display = 'block';
+        if (feedback) feedback.classList.remove('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeDemoModal() {
+      const modal = document.getElementById('demoModal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        previousFocus?.focus?.();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDemoModal();
+    });
+
+    // P0-03 & P0-04 Fix: Secure DOM nodes (no innerHTML), explicit transmission states, zero false catch success
+    async function handleDemoSubmit(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('demoName');
+      const studioInput = document.getElementById('demoStudio');
+      const disciplineInput = document.getElementById('demoDiscipline');
+      const phoneInput = document.getElementById('demoPhone');
+      const consentInput = document.getElementById('demoConsent');
+
+      const name = (nameInput?.value || '').trim();
+      const studio = (studioInput?.value || '').trim();
+      const discipline = (disciplineInput?.value || '').trim();
+      const phone = (phoneInput?.value || '').trim();
+      const consent = consentInput?.checked;
+
+      if (!consent) {
+        alert('Por favor confirma tu consentimiento para ser contactado.');
+        return;
+      }
+
+      // Input sanitization & length limits
+      if (name.length < 2 || name.length > 80 || studio.length < 2 || studio.length > 80) {
+        alert('Por favor ingresa un nombre y estudio válidos (máximo 80 caracteres).');
+        return;
+      }
+
+      const submitBtn = document.getElementById('btnSubmitLead');
+      const submitText = document.getElementById('btnSubmitLeadText');
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitText) submitText.textContent = 'Enviando solicitud...';
+
+      const leadId = 'lead_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6);
+      const leadData = {
+        leadId,
+        name,
+        studio,
+        discipline,
+        phone,
+        consentGiven: true,
+        timestamp: new Date().toISOString(),
+        clientVersion: 'V8.1.5'
+      };
+
+      let statusMode = 'demo_prepared';
+      let serverConfirmed = false;
+
+      try {
+        if (window.fetch && window.location.protocol.startsWith('http')) {
+          const res = await fetch('/api/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(leadData)
+          });
+          if (res.ok) {
+            serverConfirmed = true;
+            statusMode = 'server_confirmed';
+          } else {
+            statusMode = 'server_error';
+          }
+        } else {
+          // Running in offline / file:// / static preview mode: explicitly transparent demo mode
+          statusMode = 'offline_demo';
+        }
+      } catch (err) {
+        // Network failure or backend unreachable: do NOT fake server confirmation
+        statusMode = 'network_error';
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitText) submitText.textContent = 'Solicitar demostración';
+      }
+
+      window.openbreakPreparedLead = leadData;
+      // P1-10: Do NOT store raw phone numbers or personal PII in permanent localStorage without explicit consent
+      // Instead, keep in memory on window object only for this active session.
+
+      const formContainer = document.getElementById('modalFormContainer');
+      const feedback = document.getElementById('modalFeedback');
+      const summaryEl = document.getElementById('preparedLeadSummary');
+      const feedbackMsg = document.getElementById('feedbackMessage');
+
+      if (formContainer) formContainer.style.display = 'none';
+      if (feedback) feedback.classList.add('active');
+
+      if (statusMode === 'server_confirmed') {
+        if (feedbackMsg) feedbackMsg.textContent = '✔ Confirmado por el servidor: Tu solicitud fue recibida formalmente por Open Break.';
+      } else if (statusMode === 'server_error' || statusMode === 'network_error') {
+        if (feedbackMsg) feedbackMsg.textContent = 'Nota técnica: El servidor central no está disponible en este momento. Hemos formateado tu solicitud localmente para canal directo de WhatsApp.';
+      } else {
+        if (feedbackMsg) feedbackMsg.textContent = 'Modo Demostración / Vista previa local: Solicitud formateada sin transmisión externa.';
+      }
+
+      // P0-04: Secure DOM node generation - ZERO innerHTML interpolation of user input
+      if (summaryEl) {
+        summaryEl.textContent = ''; // clear safely
+        
+        const rowId = document.createElement('div');
+        const strongId = document.createElement('strong');
+        strongId.textContent = 'ID de Solicitud: ';
+        rowId.appendChild(strongId);
+        rowId.appendChild(document.createTextNode(leadId));
+        summaryEl.appendChild(rowId);
+
+        const rowStudio = document.createElement('div');
+        const strongStudio = document.createElement('strong');
+        strongStudio.textContent = 'Estudio: ';
+        rowStudio.appendChild(strongStudio);
+        rowStudio.appendChild(document.createTextNode(studio));
+        summaryEl.appendChild(rowStudio);
+
+        const rowContact = document.createElement('div');
+        const strongContact = document.createElement('strong');
+        strongContact.textContent = 'Contacto: ';
+        rowContact.appendChild(strongContact);
+        rowContact.appendChild(document.createTextNode(`${name} · ${phone}`));
+        summaryEl.appendChild(rowContact);
+
+        const rowDisc = document.createElement('div');
+        const strongDisc = document.createElement('strong');
+        strongDisc.textContent = 'Disciplina: ';
+        rowDisc.appendChild(strongDisc);
+        rowDisc.appendChild(document.createTextNode(discipline));
+        summaryEl.appendChild(rowDisc);
+      }
+    }
+
+    function sendViaWhatsApp() {
+      const lead = window.openbreakPreparedLead;
+      if (!lead) return;
+      const text = encodeURIComponent(`¡Hola equipo de Open Break! Me interesa una demostración para mi estudio.\n\n• Solicitud: ${lead.leadId}\n• Estudio: ${lead.studio}\n• Contacto: ${lead.name}\n• Disciplina: ${lead.discipline}\n• Teléfono: ${lead.phone}`);
+      // P1-10: Clearly identified support inquiry link
+      window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener,noreferrer');
+    }
+
+
+    // Cerrar por clic fuera del diálogo; no cerrar al pulsar dentro.
+    document.getElementById('demoModal')?.addEventListener('mousedown',function(e){if(e.target===this)closeDemoModal();});
+    document.getElementById('demoModal')?.addEventListener('keydown',function(e){
+      if(e.key!=='Tab') return;
+      const focusables=Array.from(this.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href]')).filter(x=>x.offsetParent!==null);
+      if(!focusables.length) return;
+      const first=focusables[0], last=focusables[focusables.length-1];
+      if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+      if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
+    });
+
+    // Facturación dinámica Mensual vs Anual (20% de descuento)
+    let isAnnualBilling = false;
+    function toggleBillingCycle() {
+      isAnnualBilling = !isAnnualBilling;
+      const btn = document.getElementById('billingToggleBtn');
+      const knob = document.getElementById('billingToggleKnob');
+      const labelMonthly = document.getElementById('billingLabelMonthly');
+      const labelAnnual = document.getElementById('billingLabelAnnual');
+      const priceSolo = document.getElementById('planPriceSolo');
+      const periodSolo = document.getElementById('planPeriodSolo');
+      const priceMulti = document.getElementById('planPriceMulti');
+      const periodMulti = document.getElementById('planPeriodMulti');
+
+      if (btn) {
+        btn.setAttribute('aria-checked', String(isAnnualBilling));
+        btn.style.background = isAnnualBilling ? 'var(--accent-orange)' : '#E4E4E7';
+      }
+      if (knob) {
+        knob.style.transform = isAnnualBilling ? 'translateX(22px)' : 'translateX(0)';
+      }
+      if (labelMonthly && labelAnnual) {
+        labelMonthly.style.color = isAnnualBilling ? 'var(--text-editorial)' : 'var(--text-black)';
+        labelAnnual.style.color = isAnnualBilling ? 'var(--text-black)' : 'var(--text-editorial)';
+      }
+
+      if (priceSolo && periodSolo) {
+        priceSolo.childNodes[0].nodeValue = isAnnualBilling ? '$1,512 ' : '$1,890 ';
+        periodSolo.textContent = isAnnualBilling ? 'MXN/mes (facturado anual)' : 'MXN/mes · propuesto';
+      }
+      if (priceMulti && periodMulti) {
+        priceMulti.childNodes[0].nodeValue = isAnnualBilling ? '$2,792 ' : '$3,490 ';
+        periodMulti.textContent = isAnnualBilling ? 'MXN/mes (facturado anual)' : 'MXN/mes · propuesto';
+      }
+    }
+
+  </script>

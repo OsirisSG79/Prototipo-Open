@@ -1,0 +1,11 @@
+# OPEN BREAK — MAPA DE REFERENCIAS Y ARTE (R1 – R5)
+**Fecha:** 21 de octubre de 2026  
+**Propósito:** Definir la dirección visual y de interacción por componente, garantizando identidad original y diferenciada.
+
+| ID | Referencia Visual | Concepto & Elementos Clave | Implementación en Open Break | Criterio de Aceptación |
+|:---|:---|:---|:---|:---|
+| **R1** | Grafo Isométrico Tridimensional | Nodos flotantes con profundidad espacial Z, conexiones SVG vivas con dirección de flujo y jerarquía operativa. | Studio Workflow Canvas (`src/js/studio-canvas.js`): Flujo vivo *Agenda ➔ Concurrencia Atómica ➔ Waitlist WhatsApp ➔ Stripe Direct 0%*. | Los cables conectan dinámicamente al arrastrar nodos a 60 FPS; los pulsos representan avance de reservas. |
+| **R2** | Tarjetas Objeto Materiales | Sensación física de volumen, cantos biselados, sombras multicapa de contacto, respuesta táctil y al cursor. | Solutions Deck & Tarjetas de Reserva (`pos-0..pos-3`): Baraja central con descarte físico e inclinación `rotateX(15deg)`. | Sombras de profundidad coherentes, cantos sutiles, microinteracción de clic con inercia y feedback por teclado. |
+| **R3** | Agenda Semanal Boutique | Vista semanal de 7 columnas, bloques de clases con instructora, hora, cupo atómico y estado visual en sala. | Simulador de Disponibilidad y Calendario: Cuadrícula de sala con 8 camas Reformer y vista de horarios por coach. | Filtrado por fecha, cupos nominales reales, selección de plaza y bloqueo de concurrencia determinista. |
+| **R4** | Interfaz Móvil de Alumna | Marco de smartphone premium con pantalla interactiva: feed de clases, botón 1-tap, QR de lobby y saldo. | Terminal Móvil Interactiva (Demo 4 & App Alumna): Visualización de pase digital con QR activo para check-in. | La confirmación en el teléfono actualiza el estado de la cama en sala; interfaz operable por teclado y touch. |
+| **R5** | Hero Espacial Cinematográfico | Composición envolvente tipo túnel: fotografías en primer plano en los extremos que se curvan hacia un punto focal. | Parabolic Ribbon 3D (`src/js/ribbon.js`): Cinta cinemática continua con curvatura parabólica real en Z e Y, drag e inercia. | Trayectoria cilíndrica profunda, arrastre con inercia física suave, sin cortes en el loop infinito y sin overflow. |

@@ -1,0 +1,47 @@
+{
+  "audit_version": "V8.1.4",
+  "git_branch": "fix/openbreak-v8-1-4-integrity",
+  "auditor_reference": "OPEN_BREAK_AUD-013_V8_1_3_DICTAMEN_Y_PLAN_V8_1_4.md",
+  "next_audit_target": "AUD-014",
+  "status": "READY_FOR_AUD-014_REVIEW",
+  "findings_resolution": {
+    "P0_01_ambiguous_cancellation_rejection": {
+      "status": "PASS",
+      "evidence": "cancelBooking rejects ambiguous classId mutations with ambiguous_booking when multiple bookings exist without identity; verified in test_audit_013_adversarial_p0.js and test_audit_013_acceptance.js"
+    },
+    "P0_02_ambiguous_refund_rejection_and_ui_selector": {
+      "status": "PASS",
+      "evidence": "ledgerRefundSpot requires explicit bookingId when >1 refundable booking exists, rejecting ambiguous calls with ambiguous_refund_target; ledger UI features ledgerBookingSelector; verified in test_audit_013_acceptance.js"
+    },
+    "P0_03_isolated_student_wallets": {
+      "status": "PASS",
+      "evidence": "Formal studentsById, walletsByStudentId, and transactionsById in DemoStore; student spending strictly isolated without cross-wallet depletion; verified in test_audit_013_acceptance.js"
+    },
+    "P0_04_schedule_sync_clean_id_derivation": {
+      "status": "PASS",
+      "evidence": "schedule-sync.js derives active session booking strictly from getBookingsForStudent and never falls back to classId iterables; verified in schedule-sync.js"
+    },
+    "P0_05_waitlist_solvency_validation": {
+      "status": "PASS",
+      "evidence": "Promotion checks candidate balance before confirmation; prevents negative balances by restoring spots to inventory if candidate lacks credits; verified in test_audit_013_acceptance.js"
+    },
+    "P1_01_reformer_3d_glb_kinematics_binding": {
+      "status": "PASS",
+      "evidence": "GLB mesh nodes UpholsteredCarriage and SteelTracksAndFootbar dynamically linked to glide and spring controls in reformer-3d.js"
+    },
+    "P1_02_rigorous_acceptance_testing": {
+      "status": "PASS",
+      "evidence": "test_audit_013_acceptance.js asserts all 9 acceptance criteria with zero reliance on synthetic presence assertions"
+    }
+  },
+  "deliverables": {
+    "canonical_zip": "OpenBreak_Cinematic_V8_1_4_Proyecto_Completo.zip",
+    "html_landing": "landing_melius_style.html",
+    "changelog": "CHANGELOG_V8_1_4.md",
+    "v9_roadmap": "docs/PLAN_MAESTRO_SALTO_VISUAL_V9_0_0.md",
+    "test_runner": "run_all_audits.sh",
+    "total_test_suites": 100,
+    "pass_rate": "100%"
+  },
+  "overall_status": "PASS"
+}

@@ -1,0 +1,3246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <!-- UX-15: Resource Hints & Early Asset Warmup for Optimal CWV (LCP/CLS) -->
+  <link rel="preconnect" href="assets/" crossorigin>
+  <link rel="preload" href="assets/optimized/studio_hero.webp" as="image" type="image/webp">
+  <link rel="preload" href="assets/three.min.js" as="script">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Break — Where Movement Meets Management · Studio OS</title>
+  <meta name="theme-color" content="#05070a">
+  <meta name="description" content="Open Break: una experiencia de reservas y gestión diseñada para estudios boutique de Pilates Reformer.">
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Open Break — Where Movement Meets Management · Studio OS">
+  <meta property="og:description" content="Sistema operativo cinemático y gestión de camas para estudios de Pilates Reformer.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/optimized/studio_hero.webp">
+  <meta property="og:url" content="https://openbreak.studio">
+  <!-- Twitter Card Metadata -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Open Break — Where Movement Meets Management · Studio OS">
+  <meta name="twitter:description" content="Sistema operativo cinemático y gestión de camas para estudios de Pilates Reformer.">
+  <meta name="twitter:image" content="assets/optimized/studio_hero.webp">
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Open Break OS",
+    "operatingSystem": "All",
+    "applicationCategory": "BusinessApplication",
+    "description": "Sistema operativo y de reservas para estudios de Pilates Reformer",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "MXN"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#FCFBF8">
+  <meta name="description" content="Open Break: una experiencia de reservas y gestión diseñada para estudios boutique. Descubre la propuesta y su demostración visual.">
+  <style>
+    :root {
+      --bg-white: #FFFFFF;
+      --bg-warm: #FBFBFB;
+      --bg-gray-subtle: #F8F9FA;
+      --bg-dark: #111111;
+      --bg-card-dark: #18181B;
+      --border-subtle: rgba(17, 17, 17, 0.08);
+      --border-dark: rgba(255, 255, 255, 0.12);
+      --text-black: #111111;
+      --text-editorial: #666666;
+      --text-secondary: #888888;
+      --text-white: #FFFFFF;
+      --accent-orange: #FF5500;
+      --accent-orange-hover: #E04B00;
+      --accent-yellow: #FFDD00;
+      --accent-green: #10B981;
+      --font-serif: 'Newsreader', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-primary: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-cinematic: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg-warm);
+      overflow-x: hidden;
+      width: 100%;
+    }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-warm);
+      color: var(--text-black);
+      overflow-x: hidden;
+      width: 100%;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    /* Accesibilidad: Reducción de movimiento */
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      #custom-cursor { display: none !important; }
+    }
+
+    /* Cursor contextual para puntero fino */
+    @media (pointer: fine) and (hover: hover) {
+      body { cursor: default; }
+      #custom-cursor {
+        position: fixed;
+        width: 14px;
+        height: 14px;
+        background: var(--accent-orange);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 99999;
+        transform: translate(-50%, -50%);
+        transition: width 0.25s var(--ease-primary), height 0.25s var(--ease-primary), background 0.25s ease, opacity 0.2s ease;
+        mix-blend-mode: multiply;
+        opacity: 0.9;
+      }
+      #custom-cursor.active {
+        width: 44px;
+        height: 44px;
+        background: var(--accent-yellow);
+        opacity: 0.85;
+      }
+    }
+    @media (pointer: coarse) {
+      #custom-cursor { display: none; }
+    }
+
+    /* Top Announcement Banner (OB-04: Transparente y creíble) */
+    .top-announcement-banner {
+      background: var(--accent-yellow);
+      color: #111111;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 9px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      text-align: center;
+    }
+    .top-announcement-banner .pill {
+      background: #111111;
+      color: #FFFFFF;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    /* Navbar (OB-10: Menú Móvil Accesible) */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(251, 251, 251, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-black);
+      font-weight: 800;
+      font-size: 1.22rem;
+      letter-spacing: -0.03em;
+    }
+    .nav-brand-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-orange);
+      border-radius: 50%;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-editorial);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover, .nav-links a:focus-visible {
+      color: var(--text-black);
+      outline: 2px solid var(--accent-orange);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-black);
+    }
+    .mobile-drawer {
+      display: none;
+      position: fixed;
+      top: 65px; left: 0; right: 0;
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 24px;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 999;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    }
+    .mobile-drawer.open { display: flex; }
+    .mobile-drawer a {
+      text-decoration: none;
+      color: var(--text-black);
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      padding: 9px 20px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-black);
+      cursor: pointer;
+      transition: transform 0.25s var(--ease-primary), opacity 0.25s var(--ease-primary), background-color 0.25s var(--ease-primary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn-secondary:hover {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.2);
+    }
+    .btn-primary {
+      background: var(--text-black);
+      color: var(--text-white);
+      border: none;
+      padding: 10px 22px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.25s var(--ease-primary), opacity 0.25s var(--ease-primary), background-color 0.25s var(--ease-primary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary:hover {
+      background: var(--accent-orange);
+      transform: translateY(-1px);
+    }
+    .btn-primary:focus-visible, .btn-secondary:focus-visible {
+      outline: 2px solid var(--accent-orange);
+      outline-offset: 3px;
+    }
+    /* Hero Spatial */
+    .hero-container {
+      position: relative;
+      padding: 56px 0 80px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: radial-gradient(circle at 50% 15%, rgba(255, 221, 0, 0.06) 0%, transparent 60%);
+      overflow: hidden;
+      width: 100%;
+    }
+    .hero-dot-grid {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(#d3d1cb 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .hero-title-area {
+      text-align: center;
+      max-width: 980px;
+      padding: 0 20px;
+      z-index: 10;
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .hero-category-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-editorial);
+      margin-bottom: 20px;
+    }
+    .hero-serif-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 5.2vw, 4.6rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--text-black);
+      margin-bottom: 20px;
+    }
+    .hero-serif-title em {
+      font-style: italic;
+      color: var(--accent-orange);
+    }
+    .hero-subtext {
+      font-size: clamp(0.98rem, 1.4vw, 1.18rem);
+      color: var(--text-editorial);
+      max-width: 680px;
+      margin: 0 auto 32px auto;
+      line-height: 1.55;
+    }
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 44px;
+      flex-wrap: wrap;
+    }
+
+    /* Ribbon Parabólico (OB-09: Cero overflow horizontal) */
+    .conveyor-viewport {
+      width: 100%;
+      max-width: 100vw;
+      position: relative;
+      overflow: hidden;
+      padding: 24px 0 40px 0;
+      perspective: 1200px;
+      perspective-origin: 50% 50%;
+      cursor: grab;
+      user-select: none;
+    }
+    .conveyor-viewport:active { cursor: grabbing; }
+    .conveyor-track {
+      display: flex;
+      gap: 20px;
+      width: max-content;
+      transform-style: preserve-3d;
+      will-change: transform;
+      padding-left: 10vw;
+    }
+    .ribbon-card {
+      width: 280px;
+      flex-shrink: 0;
+      background: #FFFFFF;
+      border-radius: 18px;
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .ribbon-card:hover {
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+      border-color: rgba(255, 85, 0, 0.3);
+    }
+    .ribbon-card-img {
+      height: 190px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      background-color: #E5E3DD;
+    }
+    .ribbon-card-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.65) 100%);
+    }
+    .ribbon-card-badge {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: rgba(0, 0, 0, 0.65);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      backdrop-filter: blur(4px);
+    }
+    .ribbon-card-tag {
+      position: absolute;
+      bottom: 12px; left: 12px;
+      background: var(--accent-yellow);
+      color: #111111;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .ribbon-card-body { padding: 16px 18px; }
+    .ribbon-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-black);
+      margin-bottom: 4px;
+    }
+    .ribbon-card-desc { font-size: 0.8rem; color: var(--text-editorial); }
+
+    /* Problem Section */
+    .problem-section { padding: 90px 24px; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-orange);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .section-heading {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 3.8vw, 3.2rem);
+      line-height: 1.15;
+      color: var(--text-black);
+      margin-bottom: 18px;
+      max-width: 820px;
+      letter-spacing: -0.02em;
+    }
+    .section-subtext {
+      font-size: clamp(0.92rem, 1.2vw, 1.08rem);
+      font-size: 1.02rem;
+      color: var(--text-editorial);
+      max-width: 660px;
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .problem-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 32px 28px;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    .problem-card:hover { transform: translateY(-4px); }
+    .problem-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255, 85, 0, 0.1);
+      color: var(--accent-orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+    .problem-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-black);
+      margin-bottom: 10px;
+    }
+    .problem-card-desc { font-size: 0.9rem; color: var(--text-editorial); line-height: 1.6; }
+
+    /* Solutions Deck 3D & Satélites */
+    .melius-solutions-deck-section {
+      padding: 90px 24px;
+      background: var(--bg-warm);
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid var(--border-subtle);
+      width: 100%;
+    }
+    /* DECK WIRES CANVAS */
+    .deck-wires-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .deck-wire-path {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.12);
+      stroke-width: 1.5;
+      stroke-dasharray: 4 4;
+      transition: stroke 0.4s ease, stroke-width 0.4s ease, filter 0.4s ease;
+    }
+    .deck-wire-path.active {
+      stroke: var(--accent-green);
+      stroke-width: 2.5;
+      stroke-dasharray: none;
+      filter: drop-shadow(0 0 6px rgba(0, 240, 150, 0.45));
+    }
+    @media (max-width: 900px) {
+      .deck-wires-canvas { display: none; }
+    }
+
+    .solutions-deck-arena {
+      position: relative;
+      max-width: 1100px;
+      height: 520px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .deck-perspective-container {
+      width: 360px;
+      height: 420px;
+      perspective: 900px;
+      perspective-origin: 50% 50%;
+      position: relative;
+      z-index: 10;
+      cursor: pointer;
+    }
+    .deck-stack-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transform: rotateX(15deg);
+      transition: transform 0.6s var(--ease-primary);
+    }
+    .deck-child-card {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-card-dark);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--text-white);
+      transform-style: preserve-3d;
+      transition: transform 0.6s var(--ease-primary), opacity 0.4s ease;
+      will-change: transform, opacity;
+      overflow: hidden;
+    }
+    .deck-child-card.pos-0 { transform: translate3d(0, 0, 0) scale(1); opacity: 1; z-index: 4; }
+    .deck-child-card.pos-1 { transform: translate3d(0, 16px, -40px) scale(0.96); opacity: 0.85; z-index: 3; }
+    .deck-child-card.pos-2 { transform: translate3d(0, 32px, -80px) scale(0.92); opacity: 0.65; z-index: 2; }
+    .deck-child-card.pos-3 { transform: translate3d(0, 48px, -120px) scale(0.88); opacity: 0.45; z-index: 1; }
+    .deck-child-card.discarding {
+      transform: translate3d(0, 140px, 100px) rotateX(25deg) scale(0.95) !important;
+      opacity: 0 !important;
+      transition: transform 0.45s ease-in, opacity 0.35s ease !important;
+    }
+    .deck-card-topbar { display: flex; align-items: center; justify-content: space-between; }
+    .deck-card-badge {
+      background: var(--accent-yellow);
+      color: #111111;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+    .deck-card-watermark {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 1.1rem;
+    }
+    .deck-card-title {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      line-height: 1.15;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+    }
+    .deck-card-desc {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.6;
+    }
+    .deck-click-hint {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-orange);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Satélites como botones accesibles (OB-11) */
+    .deck-satellite {
+      position: absolute;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 16px 18px;
+      width: 240px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      transition: transform 0.3s var(--ease-primary), opacity 0.3s var(--ease-primary), background-color 0.3s var(--ease-primary);
+      z-index: 5;
+      text-align: left;
+    }
+    .deck-satellite:hover, .deck-satellite:focus-visible {
+      transform: translateY(-4px) scale(1.02);
+      border-color: var(--accent-orange);
+      outline: none;
+    }
+    .deck-satellite.active { border-color: var(--accent-orange); background: #FFF9F5; }
+    .deck-satellite-icon { font-size: 1.2rem; margin-bottom: 6px; }
+    .deck-satellite-title { font-size: 0.88rem; font-weight: 700; color: var(--text-black); margin-bottom: 2px; }
+    .deck-satellite-sub { font-size: 0.74rem; color: var(--text-editorial); }
+    .sat-top-left { top: 40px; left: 40px; }
+    .sat-top-right { top: 40px; right: 40px; }
+    .sat-bottom-left { bottom: 40px; left: 40px; }
+    .sat-bottom-right { bottom: 40px; right: 40px; }
+
+    /* Demos (OB-09: Ajuste responsive en cajas) */
+    .demo-section { padding: 90px 24px; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .demo-box {
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 36px 30px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 36px;
+      align-items: center;
+      width: 100%;
+    }
+    .studio-reformer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      background: var(--bg-gray-subtle);
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .reformer-bed {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px 6px;
+      text-align: center;
+      transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .reformer-bed.occupied { background: #F3F4F6; border-color: #E5E7EB; color: #9CA3AF; }
+    .reformer-bed.hot-contested {
+      border-color: #EF4444;
+      background: #FEF2F2;
+      animation: pulse-ring 1.5s infinite;
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .bed-number { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; margin-bottom: 4px; }
+    .bed-status { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; }
+    .status-free { color: var(--accent-green); }
+    .status-busy { color: #9CA3AF; }
+    .status-contested { color: #EF4444; }
+
+    .concurrency-terminal {
+      background: var(--bg-dark);
+      border-radius: 16px;
+      padding: 20px;
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.6;
+      height: 250px;
+      overflow-y: auto;
+      width: 100%;
+    }
+    .terminal-line { margin-bottom: 6px; word-break: break-all; }
+    .term-green { color: #10B981; }
+    .term-orange { color: #FF5500; }
+    .term-yellow { color: #FFDD00; }
+    .term-gray { color: #6B7280; }
+
+    .waitlist-timeline { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+    .timeline-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: var(--bg-gray-subtle);
+      padding: 16px 20px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.04);
+      transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+      width: 100%;
+    }
+    .timeline-step.active {
+      background: #FFFFFF;
+      border-color: var(--accent-orange);
+      box-shadow: 0 8px 24px rgba(255, 85, 0, 0.08);
+    }
+    .step-time {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--accent-orange);
+      padding: 4px 8px;
+      background: rgba(255, 85, 0, 0.1);
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .step-content h5 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .step-content p { font-size: 0.82rem; color: var(--text-editorial); }
+
+    .wallet-card {
+      background: linear-gradient(135deg, #1C1917 0%, #0C0A09 100%);
+      color: #FFFFFF;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      width: 100%;
+    }
+    .wallet-balance-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; }
+    .wallet-credits { font-size: 2.8rem; font-weight: 800; line-height: 1; font-family: var(--font-mono); color: var(--accent-yellow); }
+    .ledger-list { display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto; }
+    .ledger-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      font-size: 0.82rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .tablet-frame {
+      background: #111111;
+      border-radius: 28px;
+      padding: 16px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .tablet-screen {
+      background: #FFFFFF;
+      border-radius: 18px;
+      padding: 22px;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .qr-scanner-box {
+      border: 2px dashed var(--accent-orange);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      background: #FFF8F5;
+      margin: 16px 0;
+    }
+
+    /* Reformer 3D & Fallback (OB-13) */
+    .reformer-3d-section {
+      padding: 90px 24px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      width: 100%;
+    }
+    .reformer-3d-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 48px;
+      align-items: center;
+      width: 100%;
+    }
+    .reformer-canvas-container {
+      position: relative;
+      width: 100%;
+      height: 460px;
+      background: radial-gradient(circle at 50% 50%, #F5F3EF 0%, #E7E4DC 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+    }
+    #reformerCanvas { width: 100%; height: 100%; display: block; }
+    .webgl-fallback-card {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-size: cover;
+      background-position: center;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+      color: #FFFFFF;
+    }
+    .webgl-fallback-card.active { display: flex; }
+    .webgl-fallback-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%);
+      z-index: 1;
+    }
+    .webgl-fallback-content { position: relative; z-index: 2; }
+    .reformer-controls-bar {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      padding: 8px 14px;
+      border-radius: 100px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .reformer-controls-bar button {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 100px;
+      cursor: pointer;
+    }
+    .reformer-controls-bar button:hover { background: var(--text-black); color: #FFF; }
+
+    /* Disciplinas */
+    .disciplines-section { padding: 90px 24px; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .disciplines-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .discipline-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    .discipline-card:hover { transform: translateY(-6px); }
+    .discipline-img { height: 180px; background-size: cover; background-position: center; background-color: #E5E3DD; }
+    .discipline-info { padding: 22px; }
+    .discipline-tag { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-orange); font-weight: 600; margin-bottom: 6px; }
+    .discipline-name { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+    .discipline-desc { font-size: 0.85rem; color: var(--text-editorial); line-height: 1.5; }
+
+    /* Precios */
+    .pricing-section { padding: 90px 24px; background: #FFFFFF; border-top: 1px solid var(--border-subtle); width: 100%; }
+    .pricing-container { max-width: 1100px; margin: 0 auto; width: 100%; }
+    .pricing-header { text-align: center; margin-bottom: 50px; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: stretch; }
+    .pricing-card {
+      background: var(--bg-warm);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .pricing-card.featured {
+      background: #FFFFFF;
+      border: 2px solid var(--accent-orange);
+      box-shadow: 0 25px 60px rgba(255, 85, 0, 0.08);
+      transform: scale(1.02);
+    }
+    .pricing-popular-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-orange);
+      color: #FFFFFF;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 100px;
+      text-transform: uppercase;
+    }
+    .pricing-name { font-size: 1.25rem; font-weight: 800; margin-bottom: 6px; }
+    .pricing-price { font-size: 2.6rem; font-weight: 800; color: var(--text-black); margin-bottom: 4px; }
+    .pricing-price span { font-size: 0.95rem; font-weight: 500; color: var(--text-editorial); }
+    .pricing-clarification {
+      font-size: 0.78rem;
+      color: var(--accent-green);
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+    .pricing-features li { font-size: 0.86rem; color: var(--text-editorial); display: flex; align-items: center; gap: 10px; }
+    .pricing-features li svg { flex-shrink: 0; color: var(--accent-orange); }
+
+    /* FAQ */
+    .faq-section { padding: 90px 24px; max-width: 860px; margin: 0 auto; width: 100%; }
+    .faq-accordion { display: flex; flex-direction: column; gap: 14px; margin-top: 40px; }
+    .faq-item {
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .faq-trigger {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 20px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-black);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-trigger svg { transition: transform 0.3s ease; }
+    .faq-item.open .faq-trigger svg { transform: rotate(180deg); }
+    .faq-answer { padding: 0 24px 22px 24px; font-size: 0.9rem; color: var(--text-editorial); line-height: 1.6; display: none; }
+    .faq-item.open .faq-answer { display: block; }
+
+    .conversion-banner {
+      padding: 90px 24px;
+      background: var(--bg-dark);
+      color: #FFFFFF;
+      text-align: center;
+      position: relative;
+      width: 100%;
+    }
+    .conversion-banner h2 { font-family: var(--font-serif); font-size: clamp(2.2rem, 4.5vw, 3.6rem); margin-bottom: 18px; }
+    .conversion-banner p { color: rgba(255, 255, 255, 0.7); font-size: 1.05rem; max-width: 600px; margin: 0 auto 32px auto; }
+
+    /* Modal Accesible & Feedback Real (OB-03, OB-14) */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 999999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: #FFFFFF;
+      border-radius: 24px;
+      max-width: 500px;
+      width: 100%;
+      padding: 36px 30px;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+    }
+    .modal-close {
+      position: absolute;
+      top: 18px; right: 18px;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--text-editorial);
+    }
+    .form-group { margin-bottom: 16px; text-align: left; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.9rem;
+    }
+    .modal-feedback {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .modal-feedback.active { display: block; }
+    .modal-feedback-icon { font-size: 2.8rem; margin-bottom: 12px; }
+
+    footer {
+      background: #0B0B0C;
+      color: #71717A;
+      padding: 50px 30px;
+      font-size: 0.82rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      width: 100%;
+    }
+
+    /* Media Queries sin overflow (OB-09) */
+    @media (max-width: 900px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .demo-box { grid-template-columns: 1fr; padding: 24px 20px; }
+      .reformer-3d-wrapper { grid-template-columns: 1fr; }
+      /* DECK WIRES CANVAS */
+    .deck-wires-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .deck-wire-path {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.12);
+      stroke-width: 1.5;
+      stroke-dasharray: 4 4;
+      transition: stroke 0.4s ease, stroke-width 0.4s ease, filter 0.4s ease;
+    }
+    .deck-wire-path.active {
+      stroke: var(--accent-green);
+      stroke-width: 2.5;
+      stroke-dasharray: none;
+      filter: drop-shadow(0 0 6px rgba(0, 240, 150, 0.45));
+    }
+    @media (max-width: 900px) {
+      .deck-wires-canvas { display: none; }
+    }
+
+    .solutions-deck-arena {
+        height: auto;
+        min-height: auto;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .deck-perspective-container { width: 100%; max-width: 340px; }
+      .deck-satellite {
+        position: static;
+        width: 100%;
+        max-width: 340px;
+        margin: 4px 0;
+      }
+      .site-nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      .hero-container { padding: 40px 0 60px 0; }
+    }
+    @media (max-width: 480px) {
+      .studio-reformer-grid { grid-template-columns: repeat(2, 1fr); }
+      .pricing-card.featured { transform: none; }
+      .conveyor-track { padding-left: 20px; }
+    }
+  </style>
+  <link rel="stylesheet" href="src/css/editorial.css">
+  <link rel="stylesheet" href="src/css/cinematic-hero.css">
+  <link rel="stylesheet" href="src/css/kinetic-type.css">
+  <link rel="stylesheet" href="src/css/motion.css">
+  <link rel="stylesheet" href="src/css/workflow-3d.css">
+  <link rel="stylesheet" href="src/css/schedule-grid.css">
+  <link rel="stylesheet" href="src/css/deck-interactive.css">
+  <link rel="stylesheet" href="src/css/faq-refinements.css">
+  <link rel="stylesheet" href="src/css/nav-refinements.css">
+  <link rel="stylesheet" href="src/css/melius-scroll-responsive.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link sr-only">Saltar al contenido principal</a>
+  <div id="srLiveAnnouncer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div id="custom-cursor" aria-hidden="true"><span id="custom-cursor-label"></span></div>
+
+  <!-- Announcement Banner: Transparente y 100% veraz (OB-04) -->
+  <div class="top-announcement-banner">
+    <span class="pill">Open Break / Estudio</span>
+    <span>Una forma más clara de llevar tu estudio: clases, lugares, pagos y personas.</span>
+  </div>
+
+  <!-- Navbar con Menú Móvil Accesible (OB-10) -->
+  <nav class="site-nav" aria-label="Navegación principal">
+    <a href="#" class="nav-brand">
+      <div class="nav-brand-dot"></div>
+      Open Break
+    </a>
+    <ul class="nav-links">
+      <li><a href="#problema">El Problema</a></li>
+      <li><a href="#solucion">Solución</a></li>
+      <li><a href="#demo-reservas">Reservas</a></li>
+      <li><a href="#reformer-3d">Reformer 3D</a></li>
+      <li><a href="#precios">Planes</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-secondary" onclick="openDemoModal()">Explorar Open Break</button>
+      <button class="btn-primary" onclick="openDemoModal()">
+        <span>Preparar demo</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-expanded="false" aria-controls="mobileDrawer" aria-label="Abrir menú de navegación">☰</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <a href="#problema" onclick="toggleMobileMenu()">El Problema</a>
+    <a href="#solucion" onclick="toggleMobileMenu()">Solución</a>
+    <a href="#demo-reservas" onclick="toggleMobileMenu()">Reservas</a>
+    <a href="#reformer-3d" onclick="toggleMobileMenu()">Reformer 3D</a>
+    <a href="#precios" onclick="toggleMobileMenu()">Planes</a>
+    <a href="#faq" onclick="toggleMobileMenu()">FAQ</a>
+  </div>
+
+  <!-- HERO DE COMPOSICIÓN ESPACIAL: contenido y escena forman una sola sección -->
+  <main id="main-content" role="main">
+  <section class="hero-container ob-cinematic-hero" id="hero" aria-labelledby="ob-hero-title">
+    <div class="hero-dot-grid" aria-hidden="true"></div>
+    <div class="ob-hero-head">
+      <h1 id="ob-hero-title">Todo tu estudio de<br><span class="ob-hero-rotating-wrap"><span id="ob-hero-rotating-word">Pilates Reformer</span></span><br><span>en un solo lugar.</span></h1>
+    </div>
+    <div class="ob-tunnel" id="obTunnel" aria-label="Galería visual de espacios de fitness boutique">
+      <div class="ob-tunnel-vanishing" aria-hidden="true"></div>
+      <div class="ob-tunnel-gallery" aria-hidden="true"><div class="tunnel-panel" data-side="left" data-depth="0" aria-hidden="true"><img src="assets/optimized/studio_hero.webp" alt="" fetchpriority="high" decoding="async"></div>
+<div class="tunnel-panel" data-side="left" data-depth="1" aria-hidden="true"><img src="assets/optimized/ribbon_1.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="left" data-depth="2" aria-hidden="true"><img src="assets/optimized/coach_guiding.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="left" data-depth="3" aria-hidden="true"><img src="assets/optimized/ribbon_3.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="left" data-depth="4" aria-hidden="true"><img src="assets/optimized/reformer_close.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="left" data-depth="5" aria-hidden="true"><img src="assets/optimized/ribbon_4.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="0" aria-hidden="true"><img src="assets/optimized/studio_light.webp" alt="" fetchpriority="high" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="1" aria-hidden="true"><img src="assets/optimized/ribbon_2.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="2" aria-hidden="true"><img src="assets/optimized/class_action.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="3" aria-hidden="true"><img src="assets/optimized/ribbon_5.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="4" aria-hidden="true"><img src="assets/optimized/studio_minimal.webp" alt="" loading="lazy" decoding="async"></div>
+<div class="tunnel-panel" data-side="right" data-depth="5" aria-hidden="true"><img src="assets/optimized/ribbon_1.webp" alt="" loading="lazy" decoding="async"></div></div>
+      <div class="ob-hero-copy">
+        <p>La experiencia de tus alumnas, en armonía.<br>Clases, reservas, paquetes y recepción conectados.</p>
+        <div class="ob-hero-actions">
+          <a class="ob-hero-action" href="#agenda-app" aria-label="Explorar una demostración del funcionamiento de Open Break"><span class="ob-action-icon" aria-hidden="true">↗</span><span>Explora un día con Open Break</span><span class="ob-action-arrow" aria-hidden="true">→</span></a>
+          <button class="ob-tunnel-pause" id="obTunnelPause" type="button" aria-pressed="false" aria-label="Pausar movimiento de la galería"><span aria-hidden="true">Ⅱ</span></button>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" id="faq-q1" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-ans-1">
+          <span>¿Cuánto tiempo toma la puesta en marcha inicial del estudio?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-ans-1" role="region" aria-labelledby="faq-q1">
+          La configuración de camas Reformer, instructores y paquetes queda lista en menos de 24 horas. ¡Tu estudio comienza a operar el mismo día sin contratiempos!
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" id="faq-q2" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-ans-2">
+          <span>¿Qué requerimientos técnicos necesito para operar Open Break?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-ans-2" role="region" aria-labelledby="faq-q2">
+          Solo requieres un navegador web moderno en cualquier tableta, teléfono móvil o computadora. ¡No necesitas instalar servidores locales!
+        </div>
+      </div>
+    </div>
+    <div class="ob-hero-bottom"><span>Una nueva manera de llevar tu estudio</span><a href="#problema">Desliza para descubrir <span aria-hidden="true">↓</span></a></div>
+  </section>
+  <section class="ob-gallery-section" aria-labelledby="ob-gallery-title">
+    <div class="ob-gallery-intro"><div><span class="ob-gallery-eyebrow">UN ESTUDIO, MUCHAS FORMAS DE MOVERSE</span><h2 id="ob-gallery-title">El ritmo de cada espacio es distinto.</h2></div><p>Una plataforma pensada para Reformer, Barre, Yoga y clases boutique de grupos pequeños.</p></div>
+    <div class="conveyor-controls"><span>Momentos del estudio · Arrastra para explorar</span><button id="pauseRibbonButton" type="button" aria-pressed="false">Pausar movimiento</button></div>
+    <div class="conveyor-viewport" id="conveyorViewport"><div class="conveyor-track" id="ribbonTrack">
+        <div class="ribbon-card" data-idx="0" role="group" aria-label="Escena 1 de 12: Una mañana de Reformer">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/studio_hero.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">01 / Agenda</div><div class="ribbon-card-tag">Reformer</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">Una mañana de Reformer</h3><p class="ribbon-card-desc">Espacios ordenados, sin llamadas de último minuto.</p></div>
+</div>
+<div class="ribbon-card" data-idx="1" role="group" aria-label="Escena 2 de 12: Un lugar liberado">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/studio_light.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">02 / Espera</div><div class="ribbon-card-tag">Waitlist</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">Un lugar liberado</h3><p class="ribbon-card-desc">La lista de espera recibe la siguiente oportunidad.</p></div>
+</div>
+<div class="ribbon-card" data-idx="2" role="group" aria-label="Escena 3 de 12: Clase con cupo limitado">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/studio_minimal.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">03 / Reserva</div><div class="ribbon-card-tag">Agenda</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">Clase con cupo limitado</h3><p class="ribbon-card-desc">Una plaza asignada a cada reserva.</p></div>
+</div>
+<div class="ribbon-card" data-idx="3" role="group" aria-label="Escena 4 de 12: Antes de que empiece la música">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/reformer_close.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">04 / Llegada</div><div class="ribbon-card-tag">Check-in</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">Antes de que empiece la música</h3><p class="ribbon-card-desc">La recepción confirma quién ya llegó.</p></div>
+</div>
+<div class="ribbon-card" data-idx="4" role="group" aria-label="Escena 5 de 12: Tiempo para respirar">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/coach_guiding.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">05 / Sesión</div><div class="ribbon-card-tag">Yoga</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">Tiempo para respirar</h3><p class="ribbon-card-desc">Horarios, paquetes y políticas en un mismo lugar.</p></div>
+</div>
+<div class="ribbon-card" data-idx="5" role="group" aria-label="Escena 6 de 12: Movimiento sin fricción">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/class_action.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">06 / Equipo</div><div class="ribbon-card-tag">Pilates</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">Movimiento sin fricción</h3><p class="ribbon-card-desc">Un equipo concentrado en la experiencia.</p></div>
+</div>
+<div class="ribbon-card" data-idx="6" role="group" aria-label="Escena 7 de 12: Crecer con calma">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/ribbon_1.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">07 / Escala</div><div class="ribbon-card-tag">Crecimiento</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">Crecer con calma</h3><p class="ribbon-card-desc">Organización para más alumnas y más sesiones.</p></div>
+</div>
+<div class="ribbon-card" data-idx="7" role="group" aria-label="Escena 8 de 12: Todo conectado">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/ribbon_2.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">08 / Gestión</div><div class="ribbon-card-tag">Gestión</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">Todo conectado</h3><p class="ribbon-card-desc">Una mirada a la jornada completa del estudio.</p></div>
+</div>
+<div class="ribbon-card" data-idx="8" role="group" aria-label="Escena 9 de 12: El siguiente horario">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/ribbon_3.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">09 / Horario</div><div class="ribbon-card-tag">Reserva</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">El siguiente horario</h3><p class="ribbon-card-desc">Visibilidad de clases y lugares disponibles.</p></div>
+</div>
+<div class="ribbon-card" data-idx="9" role="group" aria-label="Escena 10 de 12: La comunidad primero">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/ribbon_4.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">10 / Comunidad</div><div class="ribbon-card-tag">Boutique</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">La comunidad primero</h3><p class="ribbon-card-desc">Un recorrido más simple para tus alumnas.</p></div>
+</div>
+<div class="ribbon-card" data-idx="10" role="group" aria-label="Escena 11 de 12: Una rutina que fluye">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/ribbon_5.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">11 / Rutina</div><div class="ribbon-card-tag">Experiencia</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">Una rutina que fluye</h3><p class="ribbon-card-desc">Cada detalle operativo en su momento.</p></div>
+</div>
+<div class="ribbon-card" data-idx="11" role="group" aria-label="Escena 12 de 12: El estudio a su ritmo">
+  <div class="ribbon-card-img" style="background-image:url('assets/optimized/studio_hero.webp')"><div class="ribbon-card-overlay"></div><div class="ribbon-card-badge">12 / Recepción</div><div class="ribbon-card-tag">Recepción</div></div>
+  <div class="ribbon-card-body"><h3 class="ribbon-card-title">El estudio a su ritmo</h3><p class="ribbon-card-desc">Menos pasos para registrar una asistencia.</p></div>
+</div>
+    </div></div>
+  </section>
+
+  <!-- SECCIÓN 2: EL PROBLEMA -->
+  <section class="problem-section" id="problema">
+    <div class="section-eyebrow">Lo que nadie ve durante la clase</div>
+    <h2 class="section-heading">Tu energía debería estar en la clase, no en la recepción.</h2>
+    <p class="section-subtext">
+      Una experiencia de bienestar necesita una operación tranquila. Cuando los horarios, pagos y cancelaciones viven en distintos lugares, todo cuesta el doble.
+    </p>
+    <div class="problem-grid">
+      <div class="problem-card scroll-reveal-item">
+        <div class="problem-card-icon">⚡</div>
+        <h3 class="problem-card-title">Sobreventa de camas en horas pico</h3>
+        <p class="problem-card-desc">Dos personas intentan elegir el mismo lugar. Sin un control confiable, alguien termina esperando en recepción.</p>
+      </div>
+      <div class="problem-card scroll-reveal-item">
+        <div class="problem-card-icon">💸</div>
+        <h3 class="problem-card-title">Costos que se vuelven impredecibles</h3>
+        <p class="problem-card-desc">Una tarifa difícil de entender puede volver incierto el costo de operar cada mes.</p>
+      </div>
+      <div class="problem-card scroll-reveal-item">
+        <div class="problem-card-icon">⏳</div>
+        <h3 class="problem-card-title">Listas de espera manuales</h3>
+        <p class="problem-card-desc">Un lugar se libera cuando hay personas esperando; avisarles manualmente consume tiempo y atención.</p>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3: LA SOLUCIÓN — STICKY SCRUBBER & 3D CASCADING DECK -->
+  <section class="melius-solutions-deck-section melius-sticky-stage" id="solucion">
+    <div class="melius-sticky-viewport" id="stickyViewport">
+      <div class="scrubber-progress-track" aria-hidden="true">
+        <div class="scrubber-progress-bar" id="scrubberProgressBar"></div>
+      </div>
+      <div class="scrubber-step-indicator" id="scrubberStepIndicator">01 / RESERVA COORDINADA</div>
+    <div style="text-align: center; max-width: 800px; margin: 0 auto 50px auto;">
+      <div class="section-eyebrow">La herramienta, por dentro</div>
+      <h2 class="section-heading">Todo se conecta. Tú eliges qué mirar.</h2>
+      <p class="section-subtext">Explora la reserva, la lista de espera, los créditos y la asistencia como partes de un mismo día.</p>
+    </div>
+
+    <div class="solutions-deck-arena" id="solutionsDeckArena">
+      <!-- UX-06 / Melius Standard: SVG Reactive Bézier Wires linking Satellites to Central Stack -->
+      <svg class="deck-wires-canvas" id="deckWiresCanvas" width="100%" height="100%" viewBox="0 0 1000 600" aria-hidden="true">
+        <path id="wire-0" class="deck-wire-path" d="" />
+        <path id="wire-1" class="deck-wire-path" d="" />
+        <path id="wire-2" class="deck-wire-path" d="" />
+        <path id="wire-3" class="deck-wire-path" d="" />
+      </svg>
+
+      <!-- Satélites como botones accesibles (OB-11) -->
+      <button class="deck-satellite sat-top-left active" id="sat-0" onclick="selectDeckCard(0)" aria-label="Ver pilar Reserva coordinada">
+        <div class="deck-satellite-icon">🔒</div>
+        <div class="deck-satellite-title">Reserva coordinada</div>
+        <div class="deck-satellite-sub">Control de lugar por reserva</div>
+      </button>
+      <button class="deck-satellite sat-top-right" id="sat-1" onclick="selectDeckCard(1)" aria-label="Ver pilar Lista de espera">
+        <div class="deck-satellite-icon">⚡</div>
+        <div class="deck-satellite-title">Lista de espera</div>
+        <div class="deck-satellite-sub">Ofertas por orden de espera</div>
+      </button>
+      <button class="deck-satellite sat-bottom-left" id="sat-2" onclick="selectDeckCard(2)" aria-label="Ver pilar Ledger de Créditos">
+        <div class="deck-satellite-icon">💳</div>
+        <div class="deck-satellite-title">Ledger de Créditos</div>
+        <div class="deck-satellite-sub">Billetera inmutable con trazabilidad</div>
+      </button>
+      <button class="deck-satellite sat-bottom-right" id="sat-3" onclick="selectDeckCard(3)" aria-label="Ver pilar 0% Comisión Open Break">
+        <div class="deck-satellite-icon">💎</div>
+        <div class="deck-satellite-title">0% Comisión Open Break</div>
+        <div class="deck-satellite-sub">Integraciones de pago previstas</div>
+      </button>
+
+      <div class="deck-perspective-container" onclick="cycleDeckStack()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')cycleDeckStack()" aria-label="Baraja de soluciones, haz clic para descartar tarjeta">
+        <div class="deck-stack-wrapper" id="deckWrapper">
+          <div class="deck-child-card pos-0" id="deck-card-0">
+            <div class="deck-card-topbar">
+              <span class="deck-card-badge">Control de cupo</span>
+              <span class="deck-card-watermark">Open Break OS</span>
+            </div>
+            <div>
+              <h3 class="deck-card-title">Motor de Reserva Transaccional</h3>
+              <p class="deck-card-desc">Diseño propuesto con transacciones y validación de disponibilidad. Pendiente de pruebas de concurrencia reales.</p>
+            </div>
+            <div class="deck-click-hint"><span>Haz clic o presiona Enter para rotar</span> →</div>
+          </div>
+          <div class="deck-child-card pos-1" id="deck-card-1">
+            <div class="deck-card-topbar">
+              <span class="deck-card-badge">Waitlist Auto</span>
+              <span class="deck-card-watermark">WhatsApp Bot</span>
+            </div>
+            <div>
+              <h3 class="deck-card-title">Reasignación en Segundos</h3>
+              <p class="deck-card-desc">Si una alumna cancela con 12h de anticipación, el bot notifica a la primera en fila y asegura la asistencia de inmediato.</p>
+            </div>
+            <div class="deck-click-hint"><span>Haz clic o presiona Enter para rotar</span> →</div>
+          </div>
+          <div class="deck-child-card pos-2" id="deck-card-2">
+            <div class="deck-card-topbar">
+              <span class="deck-card-badge">Ledger Inmutable</span>
+              <span class="deck-card-watermark">Double-Entry</span>
+            </div>
+            <div>
+              <h3 class="deck-card-title">Trazabilidad Total de Créditos</h3>
+              <p class="deck-card-desc">Saldos de paquetes, vigencias dinámicas y transferencias entre alumnas sin desajustes contables ni disputas.</p>
+            </div>
+            <div class="deck-click-hint"><span>Haz clic o presiona Enter para rotar</span> →</div>
+          </div>
+          <div class="deck-child-card pos-3" id="deck-card-3">
+            <div class="deck-card-topbar">
+              <span class="deck-card-badge">0% Tarifa Extra</span>
+              <span class="deck-card-watermark">Stripe Connect</span>
+            </div>
+            <div>
+              <h3 class="deck-card-title">Tus Ingresos te Pertenecen</h3>
+              <p class="deck-card-desc">Suscripción mensual predecible. Open Break no descuenta comisión porcentual de tus ventas de paquetes o membresías.</p>
+            </div>
+            <div class="deck-click-hint"><span>Haz clic o presiona Enter para rotar</span> →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 4: DEMO 1 — CONCURRENCIA ATÓMICA (OB-05: Claramente rotulado como simulación interactiva) -->
+  <section class="demo-section" id="demo-reservas">
+    <div class="section-eyebrow">Vista previa · Reservas</div>
+    <h2 class="section-heading">Una plaza. Tres personas interesadas.</h2>
+    <p class="section-subtext">Observa cómo reacciona el motor cuando 3 alumnas intentan reclamar simultáneamente el último Reformer disponible.</p>
+
+    <div class="demo-box">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="font-size: 1.05rem; font-weight: 700;">Sala Reformer Principal (8 Camas)</h3>
+          <span style="font-size: 0.78rem; font-family: var(--font-mono); color: #EF4444; font-weight: 600;">1 Plaza Disponible</span>
+        </div>
+        <div class="studio-reformer-grid">
+          <div class="reformer-bed occupied"><div class="bed-number">01</div><div class="bed-status status-busy">Ocupada</div></div>
+          <div class="reformer-bed occupied"><div class="bed-number">02</div><div class="bed-status status-busy">Ocupada</div></div>
+          <div class="reformer-bed occupied"><div class="bed-number">03</div><div class="bed-status status-busy">Ocupada</div></div>
+          <div class="reformer-bed occupied"><div class="bed-number">04</div><div class="bed-status status-busy">Ocupada</div></div>
+          <div class="reformer-bed occupied"><div class="bed-number">05</div><div class="bed-status status-busy">Ocupada</div></div>
+          <div class="reformer-bed occupied"><div class="bed-number">06</div><div class="bed-status status-busy">Ocupada</div></div>
+          <div class="reformer-bed occupied"><div class="bed-number">07</div><div class="bed-status status-busy">Ocupada</div></div>
+          <div class="reformer-bed hot-contested" id="hotBed"><div class="bed-number">08</div><div class="bed-status status-contested" id="bed8Status">¡En Disputa!</div></div>
+        </div>
+        <div style="margin-top: 24px;">
+          <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="runConcurrencyRace()">
+            Disparar Prueba de 3 Solicitudes Simultáneas
+          </button>
+        </div>
+      </div>
+      <div>
+        <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--text-editorial);">Ejemplo visual — no conectado a base de datos</span>
+          <span style="font-size: 0.72rem; background: #E5E7EB; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Demostración Determinista</span>
+        </div>
+        <div class="concurrency-terminal" id="concurrencyLog">
+          <div class="terminal-line term-gray">// Sistema en espera. Presiona el botón para simular concurrencia.</div>
+          <div class="terminal-line term-yellow">> SELECT * FROM studio_slots WHERE class_id = 'cl-908' AND status = 'AVAILABLE' FOR UPDATE;</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 5: DEMO 2 — WAITLIST AUTOMÁTICA -->
+  <section class="demo-section" style="padding-top: 0;">
+    <div class="section-eyebrow">Vista previa · Lista de espera</div>
+    <h2 class="section-heading">Reasignación Autónoma de Cancelaciones.</h2>
+    <p class="section-subtext">Un ejemplo de cómo podría ofrecerse una plaza liberada, según las reglas que defina cada estudio.</p>
+
+    <div class="demo-box" style="grid-template-columns: 1.1fr 1fr;">
+      <div class="waitlist-timeline">
+        <div class="timeline-step active" id="step-1">
+          <div class="step-time">T + 0.00s</div>
+          <div class="step-content">
+            <h3>Cancelación Oportuna</h3>
+            <p>Alumna 'Valeria M.' cancela clase de las 18:00 hrs respetando la ventana de 12 horas.</p>
+          </div>
+        </div>
+        <div class="timeline-step" id="step-2">
+          <div class="step-time">T + 0.12s</div>
+          <div class="step-content">
+            <h3>Detección y Devolución de Crédito</h3>
+            <p>El Ledger restituye 1 crédito a Valeria y desbloquea el slot en base de datos.</p>
+          </div>
+        </div>
+        <div class="timeline-step" id="step-3">
+          <div class="step-time">T + 1.40s</div>
+          <div class="step-content">
+            <h3>Aviso a la siguiente alumna</h3>
+            <p>Se notifica a 'Sofía R.' (#1 en Waitlist) con enlace de confirmación inmediata de 10 minutos.</p>
+          </div>
+        </div>
+        <div class="timeline-step" id="step-4">
+          <div class="step-time">T + 8.20s</div>
+          <div class="step-content">
+            <h3>Confirmación Exitosa</h3>
+            <p>Sofía confirma asistencia. La cama 08 queda reasignada sin intervención del staff.</p>
+          </div>
+        </div>
+      </div>
+      <div style="background: var(--bg-gray-subtle); padding: 32px 24px; border-radius: 18px; border: 1px solid rgba(0,0,0,0.05); text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 12px;">📱</div>
+        <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 8px;">Canales de aviso (previstos)</h4>
+        <p style="font-size: 0.85rem; color: var(--text-editorial); margin-bottom: 24px;">
+          Tasa de respuesta del 89% frente al 12% habitual en correos electrónicos desatendidos.
+        </p>
+        <button class="btn-secondary" onclick="simulateWaitlistCycle()">Reproducir Ciclo Completo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 6: DEMO 3 & 4 — LEDGER INMUTABLE (OB-07: Invariantes protegidas) & CHECK-IN -->
+  <section class="demo-section" style="padding-top: 0;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px;">
+      <!-- Ledger Demo con validación estricta -->
+      <div class="wallet-card">
+        <div style="font-size: 0.76rem; font-family: var(--font-mono); color: #A8A29E; text-transform: uppercase; margin-bottom: 8px;">
+          Vista previa · Créditos
+        </div>
+        <div class="wallet-balance-row">
+          <div>
+            <div style="font-size: 0.85rem; color: #D6D3D1; margin-bottom: 4px;">Saldo Disponible</div>
+            <div class="wallet-credits" id="creditsDisplay">8 CR</div>
+          </div>
+          <div style="font-size: 0.78rem; color: #A8A29E; text-align: right;">
+            Paquete: 10 Clases Reformer<br>
+            <span style="color: var(--accent-green);">Vigencia: 45 Días</span>
+          </div>
+        </div>
+        <div class="ledger-list" id="ledgerHistory">
+          <div class="ledger-item">
+            <span>Compra de paquete (ejemplo)</span>
+            <span style="color: var(--accent-green); font-family: var(--font-mono); font-weight: 700;">+10 CR</span>
+          </div>
+          <div class="ledger-item" id="tx-initial-1">
+            <span>Reserva Cama 04 · Studio Polanco</span>
+            <span style="color: #EF4444; font-family: var(--font-mono); font-weight: 700;">-1 CR</span>
+          </div>
+          <div class="ledger-item" id="tx-initial-2">
+            <span>Reserva Cama 02 · Roma Norte</span>
+            <span style="color: #EF4444; font-family: var(--font-mono); font-weight: 700;">-1 CR</span>
+          </div>
+        </div>
+        <div style="margin-top: 14px;">
+          <label for="ledgerBookingSelector" style="display: block; font-size: 0.72rem; color: #A8A29E; margin-bottom: 4px; text-transform: uppercase; font-family: var(--font-mono);">
+            Reserva para Reembolso:
+          </label>
+          <select id="ledgerBookingSelector" style="width: 100%; background: rgba(255,255,255,0.08); color: #FFF; border: 1px solid rgba(255,255,255,0.18); border-radius: 6px; padding: 6px 8px; font-size: 0.76rem; font-family: var(--font-mono); outline: none;">
+            <option value="">(Selecciona una reserva activa)</option>
+          </select>
+        </div>
+        <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn-secondary" style="background: rgba(255,255,255,0.1); color: #FFF; border: none; font-size: 0.78rem;" onclick="addLedgerMovement('book')">Simular Reserva (-1)</button>
+          <button class="btn-secondary" style="background: rgba(255,255,255,0.1); color: #FFF; border: none; font-size: 0.78rem;" onclick="addLedgerMovement('refund')" id="btnRefund">Reembolsar Reserva Seleccionada (+1)</button>
+        </div>
+        <div id="ledgerWarning" style="color: #F87171; font-size: 0.72rem; margin-top: 8px; display: none;">
+          ℹ Invariante protegida: No es posible revertir sin una reserva activa previa.
+        </div>
+      </div>
+
+      <!-- Check-in Lobby Demo -->
+      <div class="tablet-frame">
+        <div class="tablet-screen">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EEE; padding-bottom: 12px;">
+            <span style="font-weight: 800; font-size: 0.95rem;">Recepción iPad · Open Break</span>
+            <span style="font-size: 0.72rem; font-family: var(--font-mono); color: var(--accent-green); font-weight: 700;">● CONECTADO</span>
+          </div>
+          <div class="qr-scanner-box" id="scannerState">
+            <div style="font-size: 2rem; margin-bottom: 8px;">📷</div>
+            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;" id="scannerTitle">Lector QR Activo</div>
+            <div style="font-size: 0.8rem; color: var(--text-editorial);" id="scannerDesc">Escanea el pase dinámico de la alumna desde su celular.</div>
+          </div>
+          <div>
+            <button class="btn-primary" style="width: 100%; justify-content: center; font-size: 0.85rem;" onclick="testQrScan()">
+              Simular Escaneo de Alumna
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 8: SHOWROOM 3D REFORMER INTERACTIVO (OB-13: Con Fallback Elegante) -->
+  <section class="reformer-3d-section" id="reformer-3d">
+    <div class="reformer-3d-wrapper">
+      <div>
+        <div class="section-eyebrow">Precisión y Estética</div>
+        <h2 class="section-heading">Control visual y atómico de cada máquina en sala.</h2>
+        <p class="section-subtext">
+          Diseñado para centros de Pilates Reformer contemporáneos. Monitorea el uso de camas, mantenimiento de resortes y asignación en tiempo real con una interfaz táctil que honra la elegancia del estudio.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px;">
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent-orange);"></div>
+            <span>Chasis artesanal de nogal con rieles anodizados en aluminio mate.</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent-orange);"></div>
+            <span>Monitoreo de horas de trabajo para reemplazo preventivo de resortes.</span>
+          </div>
+        </div>
+      </div>
+      <div class="reformer-canvas-container" id="reformerCanvasContainer">
+        <canvas id="reformerCanvas"></canvas>
+        <!-- WebGL Fallback Card (OB-13) -->
+        <div class="webgl-fallback-card" id="webglFallbackCard" style="background-image:url('assets/optimized/studio_hero.webp')">
+          <div class="webgl-fallback-overlay"></div>
+          <div class="webgl-fallback-content">
+            <span style="background: var(--accent-orange); color: #FFF; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">Vista Previa Estática HD</span>
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin: 4px 0;">Cama Reformer Studio Precision</h3>
+            <p style="font-size: 0.78rem; opacity: 0.9;">Aceleración WebGL no disponible en este entorno. Visualizando gemelo digital estático.</p>
+          </div>
+        </div>
+        <div class="reformer-controls-bar">
+          <button onclick="triggerCarriageGlide()" data-reformer-control="true">Deslizar Carro (Glide)</button>
+          <button onclick="toggleReformerSprings()" data-reformer-control="true">Alternar Resortes</button>
+          <button onclick="resetReformerCamera()" data-reformer-control="true">Restablecer Vista</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 9: TIPOS DE ESTUDIO -->
+  <section class="disciplines-section" id="disciplinas">
+    <div style="text-align: center; max-width: 800px; margin: 0 auto 50px auto;">
+      <div class="section-eyebrow">Versatilidad Boutique</div>
+      <h2 class="section-heading">Calibrado para el modelo operativo de tu estudio.</h2>
+      <p class="section-subtext">Cada disciplina tiene su dinámica de cupos, accesorios y tiempos de recuperación.</p>
+    </div>
+    <div class="disciplines-grid">
+      <div class="discipline-card"><div class="discipline-img" style="background-image:url('assets/optimized/reformer_close.webp')"></div><div class="discipline-info"><div class="discipline-tag">8–14 camas</div><h3 class="discipline-name">Pilates Reformer</h3><p class="discipline-desc">Un lugar específico para cada alumna.</p></div></div>
+<div class="discipline-card"><div class="discipline-img" style="background-image:url('assets/optimized/coach_guiding.webp')"></div><div class="discipline-info"><div class="discipline-tag">Barras y mat</div><h3 class="discipline-name">Barre &amp; Mat Flow</h3><p class="discipline-desc">Grupos pequeños y horarios con mucha rotación.</p></div></div>
+<div class="discipline-card"><div class="discipline-img" style="background-image:url('assets/optimized/studio_light.webp')"></div><div class="discipline-info"><div class="discipline-tag">Sesiones y talleres</div><h3 class="discipline-name">Yoga &amp; Sound Baths</h3><p class="discipline-desc">Clases regulares, pases y encuentros especiales.</p></div></div>
+<div class="discipline-card"><div class="discipline-img" style="background-image:url('assets/optimized/class_action.webp')"></div><div class="discipline-info"><div class="discipline-tag">Bicicletas asignadas</div><h3 class="discipline-name">Indoor Cycling</h3><p class="discipline-desc">Cupo por bicicleta y recepción organizada.</p></div></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 10: PRECIOS TRANSPARENTES 2026 (MXN) -->
+    <!-- ======================================================================
+       SPRINT 05: AGENDA SEMANAL DUAL (CUADRÍCULA 7 COLUMNAS + MÓVIL) (R3 + R4)
+       ====================================================================== -->
+  <section class="schedule-mobile-section" id="agenda-app" style="padding: 100px 24px; background: var(--bg-warm); border-top: 1px solid var(--border-subtle); width: 100%;">
+    <div style="max-width: 1240px; margin: 0 auto;">
+      <div style="text-align: center; max-width: 820px; margin: 0 auto 56px auto;">
+        <div class="section-eyebrow">Vista de demostración · Agenda y móvil</div>
+        <h2 class="section-heading">La agenda del estudio y la app de la alumna en un solo pulso.</h2>
+        <p class="section-subtext">
+          Toca cualquier clase en el calendario semanal interactivo o reserva desde el smartphone de demostración. Los cupos, créditos y reservas cambian juntos en tiempo real gracias al motor transaccional.
+        </p>
+      </div>
+
+      <!-- Grid 2 Columnas: Agenda Semanal (R3) + Teléfono Alumna (R4) -->
+      <div class="suite-sync-grid" style="display: grid; grid-template-columns: 1.25fr 0.95fr; gap: 40px; align-items: start;">
+        
+        <!-- COLUMNA 1: AGENDA SEMANAL CON VISTA DUAL (R3) -->
+        <div class="schedule-desk-card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: 24px; padding: 28px; box-shadow: var(--shadow-card);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-orange); font-weight: 700; text-transform: uppercase;">Semana Actual · 19–25 Oct 2026</span>
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-black);">Sala Principal · 8 camas Reformer</h3>
+            </div>
+            
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <!-- Selector de Vista: Diaria vs Cuadrícula Semanal Completa -->
+              <div class="schedule-view-toggle">
+                <button type="button" class="view-toggle-btn active" id="viewToggleDay" onclick="setScheduleView('day')">Vista Diaria</button>
+                <button type="button" class="view-toggle-btn" id="viewToggleGrid" onclick="setScheduleView('grid')">Semana Completa</button>
+              </div>
+              <span style="background: rgba(16, 185, 129, 0.1); color: var(--accent-green); font-size: 0.74rem; font-weight: 700; padding: 4px 10px; border-radius: 100px; display: inline-flex; align-items: center; gap: 5px;">
+                <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent-green);"></span> Demo reactiva
+              </span>
+            </div>
+          </div>
+
+          <!-- CONTENEDOR VISTA 1: SELECTOR DE DÍAS Y LISTA COMPACTA -->
+          <div id="scheduleDayViewContainer">
+            <!-- Selector de Días Semanales (7 días) -->
+            <div class="calendar-days-bar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 20px;" role="tablist">
+              <button class="cal-day-btn active" onclick="switchScheduleDay(0)" id="cal-day-0" style="padding: 10px 4px; text-align: center; border: 1.5px solid var(--accent-orange); background: #FFF5EE; border-radius: 12px; cursor: pointer;">
+                <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--accent-orange); font-weight: 700;">LUN</div>
+                <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-black);">19</div>
+              </button>
+              <button class="cal-day-btn" onclick="switchScheduleDay(1)" id="cal-day-1" style="padding: 10px 4px; text-align: center; border: 1px solid var(--border-subtle); background: var(--bg-gray-subtle); border-radius: 12px; cursor: pointer;">
+                <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-editorial); font-weight: 600;">MAR</div>
+                <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-black);">20</div>
+              </button>
+              <button class="cal-day-btn" onclick="switchScheduleDay(2)" id="cal-day-2" style="padding: 10px 4px; text-align: center; border: 1px solid var(--border-subtle); background: var(--bg-gray-subtle); border-radius: 12px; cursor: pointer;">
+                <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-editorial); font-weight: 600;">MIÉ</div>
+                <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-black);">21</div>
+              </button>
+              <button class="cal-day-btn" onclick="switchScheduleDay(3)" id="cal-day-3" style="padding: 10px 4px; text-align: center; border: 1px solid var(--border-subtle); background: var(--bg-gray-subtle); border-radius: 12px; cursor: pointer;">
+                <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-editorial); font-weight: 600;">JUE</div>
+                <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-black);">22</div>
+              </button>
+              <button class="cal-day-btn" onclick="switchScheduleDay(4)" id="cal-day-4" style="padding: 10px 4px; text-align: center; border: 1px solid var(--border-subtle); background: var(--bg-gray-subtle); border-radius: 12px; cursor: pointer;">
+                <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-editorial); font-weight: 600;">VIE</div>
+                <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-black);">23</div>
+              </button>
+              <button class="cal-day-btn" onclick="switchScheduleDay(5)" id="cal-day-5" style="padding: 10px 4px; text-align: center; border: 1px solid var(--border-subtle); background: var(--bg-gray-subtle); border-radius: 12px; cursor: pointer;">
+                <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-editorial); font-weight: 600;">SÁB</div>
+                <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-black);">24</div>
+              </button>
+              <button class="cal-day-btn" onclick="switchScheduleDay(6)" id="cal-day-6" style="padding: 10px 4px; text-align: center; border: 1px solid var(--border-subtle); background: var(--bg-gray-subtle); border-radius: 12px; cursor: pointer;">
+                <div style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-editorial); font-weight: 600;">DOM</div>
+                <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-black);">25</div>
+              </button>
+            </div>
+
+            <p id="scheduleFeedback" role="status" aria-live="polite" class="ob-schedule-feedback">Agenda de demostración. Selecciona una clase para probarla.</p>
+            
+            <!-- Lista de Clases del Día Seleccionado -->
+            <div class="calendar-classes-container" id="calendarClassesList" style="display: flex; flex-direction: column; gap: 12px;">
+              <!-- Renderizado dinámicamente -->
+            </div>
+          </div>
+
+          <!-- CONTENEDOR VISTA 2: CUADRÍCULA SEMANAL AUTÉNTICA (R3) -->
+          <div id="scheduleGridViewContainer" style="display: none;">
+            <div class="weekly-grid-container" id="weeklyGridContent">
+              <!-- Renderizado dinámicamente como matriz de 7 columnas -->
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA 2: TELÉFONO INTERACTIVO DE LA ALUMNA (R4) -->
+        <div class="mobile-phone-showcase" style="display: flex; flex-direction: column; align-items: center;">
+          <div class="smartphone-chassis" style="width: 320px; background: #000000; border-radius: 44px; padding: 12px; box-shadow: var(--shadow-deep-dark); border: 4px solid #27272A; position: relative;">
+            
+            <!-- Dynamic Island / Bocina -->
+            <div style="position: absolute; top: 18px; left: 50%; transform: translateX(-50%); width: 84px; height: 18px; background: #000; border-radius: 20px; z-index: 10; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px;">
+              <div style="width: 8px; height: 8px; border-radius: 50%; background: #18181B;"></div>
+            </div>
+
+            <!-- Pantalla del Teléfono -->
+            <div class="smartphone-screen" style="background: #FAFAFA; border-radius: 34px; overflow: hidden; min-height: 580px; display: flex; flex-direction: column; justify-content: space-between; font-family: var(--font-sans);">
+              
+              <!-- Top bar móvil -->
+              <div style="padding: 24px 18px 12px 18px; background: #FFF; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-size: 0.72rem; color: var(--text-editorial);">Bienvenida,</div>
+                  <div style="font-size: 0.95rem; font-weight: 800; color: #111;">Camila Morales</div>
+                </div>
+                <div style="background: var(--bg-warm); padding: 4px 10px; border-radius: 100px; border: 1px solid var(--border-subtle); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: var(--accent-orange);" id="appCreditsBadge">
+                  8 CR
+                </div>
+              </div>
+
+              <!-- Contenido Activo en Pantalla Móvil -->
+              <div style="padding: 16px; flex-grow: 1;">
+                
+                <!-- TAB 1: CLASES (HOME) -->
+                <div id="appTabClasses" class="app-screen-tab">
+                  <!-- Tarjeta Próxima Clase Reservada -->
+                  <div id="appBookingCard" style="background: #111111; color: #FFF; border-radius: 18px; padding: 16px; margin-bottom: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                      <span style="font-size: 0.65rem; background: var(--accent-orange); color: #FFF; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">Próxima Sesión</span>
+                      <span style="font-size: 0.72rem; color: #A1A1AA;">Hoy · 18:00</span>
+                    </div>
+                    <div style="font-weight: 800; font-size: 1rem; margin-bottom: 2px;" id="appBookingTitle">Reformer Sculpt Pro</div>
+                    <div style="font-size: 0.74rem; color: #D4D4D8; margin-bottom: 12px;">Coach Sofía Valdés · Cama #04</div>
+                    
+                    <div style="display: flex; gap: 8px;">
+                      <button onclick="appTriggerCheckIn()" style="flex: 1; background: #FFFFFF; color: #111; border: none; padding: 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">
+                        Mostrar pase
+                      </button>
+                      <button onclick="appCancelBooking()" style="background: rgba(255,255,255,0.1); color: #EF4444; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Feed de Clases Rápidas -->
+                  <div style="font-size: 0.78rem; font-weight: 800; color: #111; margin-bottom: 8px;">Explorar Clases de Hoy</div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;" id="appFastClasses">
+                    <div style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                      <div>
+                        <div style="font-weight: 700; font-size: 0.82rem;">Classic Reformer Flow</div>
+                        <div style="font-size: 0.7rem; color: var(--text-editorial);">19:30 · 2 cupos libres</div>
+                      </div>
+                      <button onclick="appBookFastClass('Classic Reformer Flow', '19:30')" style="background: var(--text-black); color: #FFF; border: none; padding: 6px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
+                        Reservar
+                      </button>
+                    </div>
+                    <div style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                      <div>
+                        <div style="font-weight: 700; font-size: 0.82rem;">Jumpboard Cardio & Core</div>
+                        <div style="font-size: 0.7rem; color: var(--text-editorial);">08:00 · 3 cupos libres</div>
+                      </div>
+                      <button onclick="appBookFastClass('Jumpboard Cardio & Core', '08:00')" style="background: var(--text-black); color: #FFF; border: none; padding: 6px 12px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
+                        Reservar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB 2: WAITLISTS (ESPERA) -->
+                <div id="appTabWaitlist" class="app-screen-tab" style="display: none;">
+                  <div style="font-size: 0.85rem; font-weight: 800; color: #111; margin-bottom: 8px;">Listas de Espera Activas</div>
+                  <div id="appWaitlistContent" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: 14px; padding: 14px;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <span style="font-size: 0.68rem; font-weight: 700; color: #D97706; background: #FEF3C7; padding: 2px 6px; border-radius: 4px;">Turno #1 en fila</span>
+                        <span style="font-size: 0.72rem; color: #71717A;">Mañana 07:00</span>
+                      </div>
+                      <div style="font-weight: 700; font-size: 0.85rem; color: #18181B;">Reformer Athletic Pro</div>
+                      <div style="font-size: 0.72rem; color: #71717A; margin-top: 2px;">Te notificaremos por push en cuanto se libere una cama.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB 3: BILLETERA / CRÉDITOS -->
+                <div id="appTabWallet" class="app-screen-tab" style="display: none;">
+                  <div style="font-size: 0.85rem; font-weight: 800; color: #111; margin-bottom: 8px;">Mi Billetera de Estudio</div>
+                  <div style="background: linear-gradient(135deg, #18181B 0%, #27272A 100%); color: #FFF; border-radius: 16px; padding: 16px; margin-bottom: 12px;">
+                    <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; color: #A1A1AA;">Saldo Disponible</div>
+                    <div style="font-size: 1.6rem; font-weight: 800; margin: 4px 0;" id="appWalletBalance">8 Créditos</div>
+                    <div style="font-size: 0.7rem; color: #E4E4E7;">Membresía Studio VIP · Renovación 1 Nov</div>
+                  </div>
+                  <div style="font-size: 0.75rem; font-weight: 700; color: #18181B; margin-bottom: 6px;">Paquetes disponibles</div>
+                  <div style="background: #FFF; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-weight: 700; font-size: 0.78rem;">Pack 5 Clases Reformer</div>
+                      <div style="font-size: 0.68rem; color: #71717A;">Vigencia 30 días</div>
+                    </div>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--accent-orange);">$1,450 MXN</span>
+                  </div>
+                </div>
+
+                <!-- Simulación Pase QR Activo -->
+                <div id="appQrOverlay" style="display: none; background: #FFFFFF; border: 2px dashed var(--accent-orange); border-radius: 16px; padding: 16px; text-align: center; margin-top: 10px;">
+                  <div style="font-size: 1.8rem;">📱</div>
+                  <div style="font-weight: 800; font-size: 0.85rem; margin: 4px 0;">Pase de demostración</div>
+                  <div style="font-size: 0.68rem; color: var(--text-editorial); margin-bottom: 8px;">Visualización de pase; QR real pendiente de implementación</div>
+                  <div style="background: #111; color: #FFF; font-family: var(--font-mono); font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; display: inline-block;">PASE DE PRUEBA · SIN VALIDEZ</div>
+                </div>
+
+              </div>
+
+              <!-- Bottom Bar App con Tabs Funcionales -->
+              <div style="background: #FFF; border-top: 1px solid rgba(0,0,0,0.06); padding: 10px 18px; display: flex; justify-content: space-around; font-size: 0.72rem; color: var(--text-editorial);">
+                <button type="button" onclick="switchAppTab('classes')" id="appNavBtnClasses" style="background: none; border: none; color: var(--accent-orange); font-weight: 700; cursor: pointer; padding: 4px;">● Clases</button>
+                <button type="button" onclick="switchAppTab('waitlist')" id="appNavBtnWaitlist" style="background: none; border: none; color: var(--text-editorial); font-weight: 500; cursor: pointer; padding: 4px;">Waitlists</button>
+                <button type="button" onclick="switchAppTab('wallet')" id="appNavBtnWallet" style="background: none; border: none; color: var(--text-editorial); font-weight: 500; cursor: pointer; padding: 4px;">Mi Billetera</button>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 14px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-editorial); text-align: center;">
+            Vista interactiva de demostración · No es una app publicada
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+    <!-- Atelier workflow: diseño editorial 2.5D con flujo interactivo (demostración de procesos, no backend) -->
+  <section class="workflow-canvas-section workflow-section-v7" id="canvas-section" aria-labelledby="workflow-heading">
+    <div class="workflow-intro">
+      <div class="workflow-intro-side"><span class="tiny-index">Open Break / en movimiento</span><span class="tiny-line"></span><span class="tiny-index">Una jornada, cuatro momentos</span></div>
+      <div><h2 id="workflow-heading">Desde el primer lugar <em>hasta el último check-in.</em></h2>
+      <p>Todo está relacionado. Explora cómo una clase se organiza, ocupa y confirma. Es una representación interactiva del flujo planeado.</p></div>
+    </div>
+    <div class="workflow-frame workflow-canvas-isometric">
+      <div class="workflow-toolbar"><span><span class="toolbar-indicator"></span> RECORRIDO DE PRODUCTO</span><span>DEMO INTERACTIVA · SIN DATOS REALES</span></div>
+      <div class="workflow-board-container" id="workflowBoard" aria-label="Diagrama interactivo del flujo de una reserva">
+        <svg class="workflow-wires-svg" width="100%" height="100%" viewBox="0 0 1000 600" aria-hidden="true" preserveAspectRatio="none">
+          <path id="wire-1-2" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path id="wire-2-3" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path id="wire-3-4" fill="none" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <button class="workflow-node workflow-node-v7" id="node-agenda" data-step="0" style="--px: 6%; --py: 15%;" aria-pressed="true"><small class="workflow-node-step">01 / AGENDA</small><strong class="workflow-node-title">Elige una clase.</strong><span class="workflow-node-desc">Reformer · 08:00 · 8 lugares</span><b>Plazas abiertas ↗</b></button>
+        <button class="workflow-node workflow-node-v7" id="node-atomic" data-step="1" style="--px: 30%; --py: 49%;" aria-pressed="false"><small class="workflow-node-step">02 / RESERVA</small><strong class="workflow-node-title">Un lugar, una persona.</strong><span class="workflow-node-desc">Se asigna la plaza disponible</span><b>Confirmación ↗</b></button>
+        <button class="workflow-node workflow-node-v7" id="node-waitlist" data-step="2" style="--px: 56%; --py: 14%;" aria-pressed="false"><small class="workflow-node-step">03 / ESPERA</small><strong class="workflow-node-title">El cupo vuelve.</strong><span class="workflow-node-desc">Una cancelación libera espacio</span><b>Siguiente en lista ↗</b></button>
+        <button class="workflow-node workflow-node-v7" id="node-stripe" data-step="3" style="--px: 77%; --py: 49%;" aria-pressed="false"><small class="workflow-node-step">04 / RECEPCIÓN</small><strong class="workflow-node-title">Ya puedes entrar.</strong><span class="workflow-node-desc">Check-in de la alumna</span><b>Asistencia lista ↗</b></button>
+      </div>
+      <div class="workflow-bottom"><div class="workflow-active"><span class="workflow-index" id="workflowActiveIndex">01</span><div><strong id="workflowActiveTitle">Tu clase, en orden.</strong><p id="workflowActiveDescription">El estudio publica sus lugares y las alumnas eligen un horario.</p></div></div><div class="workflow-actions"><button id="workflowPrev" aria-label="Etapa anterior">←</button><button id="workflowNext" aria-label="Siguiente etapa">→</button></div></div>
+    </div>
+  </section>
+
+  <section class="pricing-section" id="precios">
+    <div class="pricing-container">
+      <div class="pricing-header">
+        <div class="section-eyebrow">Sin Cargos Ocultos</div>
+        <h2 class="section-heading">Suscripción fija. Sin comisión adicional propia.</h2>
+        <p class="section-subtext">Tu dinero entra íntegro a tu cuenta de banco. Open Break no descuenta comisión porcentual de tus ventas.</p>
+        
+        <!-- Toggle Anual / Mensual con descuento visible -->
+        <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 24px;">
+          <span style="font-size: 0.82rem; font-weight: 600; color: var(--text-black);" id="billingLabelMonthly">Facturación Mensual</span>
+          <button type="button" onclick="toggleBillingCycle()" id="billingToggleBtn" role="switch" aria-checked="false" style="width: 48px; height: 26px; background: #E4E4E7; border-radius: 100px; border: none; position: relative; cursor: pointer; padding: 2px; transition: background 0.3s ease;" aria-label="Alternar entre facturación mensual y anual">
+            <span id="billingToggleKnob" style="display: block; width: 22px; height: 22px; background: #FFF; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.15); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);"></span>
+          </button>
+          <span style="font-size: 0.82rem; font-weight: 600; color: var(--text-editorial); display: inline-flex; align-items: center; gap: 6px;" id="billingLabelAnnual">
+            Facturación Anual <span style="background: rgba(16, 185, 129, 0.12); color: var(--accent-green); font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 4px;">Ahorra 20%</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card scroll-reveal-item">
+          <div>
+            <h3 class="pricing-name">Estudio Solo</h3>
+            <p style="font-size: 0.85rem; color: var(--text-editorial); margin-bottom: 20px;">Para estudios boutique con 1 sede física.</p>
+            <div class="pricing-price" id="planPriceSolo">$1,890 <span id="planPeriodSolo">MXN/mes · propuesto</span></div>
+            <div class="pricing-clarification">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>0% comisión de Open Break</span>
+            </div>
+            <ul class="pricing-features">
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Hasta 12 camas Reformer o 25 mats</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Motor de reservas con bloqueo atómico</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Integración con pagos, sujeta a disponibilidad</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Check-in 1-Tap para iPad</li>
+            </ul>
+          </div>
+          <button class="btn-secondary" style="width: 100%; justify-content: center;" onclick="openDemoModal()">Explorar propuesta</button>
+        </div>
+
+        <div class="pricing-card featured scroll-reveal-item">
+          <div class="pricing-popular-badge">Plan destacado</div>
+          <div>
+            <h3 class="pricing-name">Multi-Sede Pro</h3>
+            <p style="font-size: 0.85rem; color: var(--text-editorial); margin-bottom: 20px;">Para estudios consolidados en crecimiento.</p>
+            <div class="pricing-price" id="planPriceMulti">$3,490 <span id="planPeriodMulti">MXN/mes · propuesto</span></div>
+            <div class="pricing-clarification">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>0% comisión de Open Break</span>
+            </div>
+            <ul class="pricing-features">
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Hasta 3 sedes incluidas</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Avisos automatizados (en desarrollo)</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Billetera compartida multisede</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Nómina y comisiones de coaches</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Soporte según plan contratado</li>
+            </ul>
+          </div>
+          <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="openDemoModal()">Conocer propuesta</button>
+        </div>
+
+        <div class="pricing-card scroll-reveal-item">
+          <div>
+            <h3 class="pricing-name">Escala & Franquicias</h3>
+            <p style="font-size: 0.85rem; color: var(--text-editorial); margin-bottom: 20px;">Redes de estudios y franquicias en México.</p>
+            <div class="pricing-price">Custom</div>
+            <div class="pricing-clarification">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>SLA Empresarial 99.99%</span>
+            </div>
+            <ul class="pricing-features">
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Sedes ilimitadas</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> App nativa blanca personalizada (iOS & Android)</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Facturación CFDI 4.0 automatizada</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Gerente de cuenta dedicado</li>
+            </ul>
+          </div>
+          <button class="btn-secondary" style="width: 100%; justify-content: center;" onclick="openDemoModal()">Preparar contacto</button>
+        </div>
+      </div>
+      <p style="text-align: center; font-size: 0.78rem; color: var(--text-secondary); margin-top: 32px;">
+        * Precios y funciones ilustrativos, sujetos a validación antes del lanzamiento. El procesamiento de pagos puede generar comisiones adicionales ajenas a Open Break.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 11: FAQ ACCESIBLE -->
+  <section class="faq-section" id="faq">
+    <div style="text-align: center;">
+      <div class="section-eyebrow">Preguntas Frecuentes</div>
+      <h2 class="section-heading">Claridad desde el primer día.</h2>
+    </div>
+
+    <div class="faq-accordion">
+      <div class="faq-item">
+        <button class="faq-trigger" id="faq-q3" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-ans-3">
+          <span>¿Cómo garantizan que no habrá sobreventa de camas en horas pico?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-ans-3" role="region" aria-labelledby="faq-q3">
+          El motor de reservas se está diseñando con transacciones de base de datos y restricciones de disponibilidad. Esta página muestra su funcionamiento previsto mediante una simulación, no una validación de concurrencia en producción.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" id="faq-q4" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-ans-4">
+          <span>¿Qué significa exactamente 0% de comisión de Open Break?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-ans-4" role="region" aria-labelledby="faq-q4">
+          El modelo propuesto no incluye una comisión porcentual adicional de Open Break por venta. El procesamiento de pagos, los impuestos y posibles servicios externos tienen costos propios; las integraciones y condiciones finales deberán confirmarse antes del lanzamiento.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" id="faq-q5" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-ans-5">
+          <span>¿Cómo funciona la integración de WhatsApp para listas de espera?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-ans-5" role="region" aria-labelledby="faq-q5">
+          La propuesta contempla ofertas automáticas de lugares disponibles y avisos por canales autorizados. Las reglas de tiempo, confirmación e integración con WhatsApp están sujetas a implementación y validación.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" id="faq-q6" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-ans-6">
+          <span>¿Puedo migrar mi base de clientes existente desde Mindbody o Fitco?</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-ans-6" role="region" aria-labelledby="faq-q6">
+          La migración de clientes, paquetes y horarios dependerá del formato de exportación de tu sistema actual. La compatibilidad y los tiempos deben revisarse antes de contratar.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conversión Final Banner -->
+  <section class="conversion-banner">
+    <h2>Tu estudio merece operar a la altura de su experiencia.</h2>
+    <p>Conoce cómo podría sentirse una operación más sencilla para tu equipo y tus alumnas.</p>
+    <button class="btn-primary" style="background: var(--accent-orange); padding: 16px 36px; font-size: 1rem;" onclick="openDemoModal()">
+      Preparar demostración Guiada
+    </button>
+  </section>
+
+  <!-- Footer -->
+  </main>
+
+  <footer>
+    <div>
+      <strong style="color: #FFF;">Open Break</strong> · Operating System for Boutique Studios © 2026. Todos los derechos reservados.
+    </div>
+    <div style="display: flex; gap: 20px;">
+      <a href="#problema" style="color: #71717A; text-decoration: none;">Solución</a>
+      <a href="#precios" style="color: #71717A; text-decoration: none;">Precios</a>
+      <a href="#faq" style="color: #71717A; text-decoration: none;">FAQ</a>
+    </div>
+  </footer>
+
+  <!-- Modal de Captura de Demos Honesto y Persistente (OB-03, OB-14) -->
+  <div class="modal-backdrop" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeDemoModal()" aria-label="Cerrar modal">✕</button>
+      <div id="modalFormContainer">
+        <h3 id="modalTitle" style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 8px;">Preparar una solicitud de demo</h3>
+        <p style="font-size: 0.88rem; color: var(--text-editorial); margin-bottom: 24px;">
+          Cuéntanos de tu estudio. El envío a Open Break todavía no está disponible en esta versión de demostración.
+        </p>
+        <form onsubmit="handleDemoSubmit(event)">
+          <div class="form-group">
+            <label for="demoName">Nombre completo</label>
+            <input type="text" id="demoName" name="name" autocomplete="name" required placeholder="Ej. Camila Morales">
+          </div>
+          <div class="form-group">
+            <label for="demoStudio">Nombre de tu estudio</label>
+            <input type="text" id="demoStudio" name="studio" autocomplete="organization" required placeholder="Ej. Cima Pilates Studio">
+          </div>
+          <div class="form-group">
+            <label for="demoDiscipline">Disciplina principal</label>
+            <select id="demoDiscipline" name="discipline">
+              <option>Pilates Reformer</option>
+              <option>Barre / Mat</option>
+              <option>Yoga / Sound Bath</option>
+              <option>Indoor Cycling</option>
+              <option>Entrenamiento Funcional</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="demoPhone">WhatsApp de contacto</label>
+            <input type="tel" id="demoPhone" name="phone" autocomplete="tel" required placeholder="+52 55 1234 5678">
+          </div>
+          <div class="form-group" style="display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; margin-bottom: 8px;">
+            <input type="checkbox" id="demoConsent" name="consent" required style="width: 16px; height: 16px; margin-top: 2px; accent-color: var(--accent-green);">
+            <label for="demoConsent" style="font-size: 0.76rem; color: var(--text-editorial); line-height: 1.4; cursor: pointer;">
+              Acepto ser contactado únicamente vía WhatsApp para coordinar la demostración guiada de Open Break.
+            </label>
+          </div>
+          <button type="submit" id="btnSubmitLead" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+            <span id="btnSubmitLeadText">Solicitar demostración</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Feedback de confirmación con canal directo y seguro (UX-19 / V8.1.1) -->
+      <div class="modal-feedback" id="modalFeedback" role="status" aria-live="polite">
+        <div class="modal-feedback-icon">✔</div>
+        <h3 style="font-family: var(--font-serif); font-size: 1.6rem; margin-bottom: 8px;">Solicitud registrada con éxito</h3>
+        <p style="font-size: 0.88rem; color: var(--text-editorial); margin-bottom: 16px;" id="feedbackMessage">
+          Tu solicitud ha sido formateada y preparada para canal directo con nuestro equipo.
+        </p>
+        <div style="background: var(--bg-gray-subtle, #F4F4F5); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 14px; font-family: var(--font-mono); font-size: 0.76rem; text-align: left; margin-bottom: 18px; color: var(--text-black);" id="preparedLeadSummary">
+          <!-- Resumen de lead renderizado en tiempo real -->
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn-primary" id="btnSendWhatsApp" onclick="sendViaWhatsApp()" style="background: #25D366; border-color: #25D366;">
+            Enviar por WhatsApp ↗
+          </button>
+          <button class="btn-secondary" onclick="copyPreparedRequest()">
+            Copiar al portapapeles
+          </button>
+        </div>
+        <button class="btn-secondary" style="margin: 12px auto 0; font-size: 0.75rem; border: none;" onclick="closeDemoModal()">Cerrar ventana</button>
+      </div>
+    </div>
+  </div>
+<script src="assets/three.min.js"></script>
+<script src="assets/GLTFLoader.js"></script>
+<script>
+/**
+ * Open Break — Smooth Lerp Contextual Cursor (UX-07)
+ * Runs strictly on fine pointers (mouse/trackpad), disabled on touch & reduced motion.
+ * Contextual morphing states: DEFAULT, POINTER, DRAG, ORBIT (360°), EXPLORE.
+ */
+class ContextualCursor {
+  constructor() {
+    this.cursorEl = document.getElementById('custom-cursor');
+    this.cursorLabel = document.getElementById('custom-cursor-label');
+    this.isEnabled = window.matchMedia('(pointer: fine) and (hover: hover)').matches &&
+                     !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    this.mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    this.pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    this.lerpFactor = 0.16;
+    this.state = 'DEFAULT';
+
+    if (this.isEnabled && this.cursorEl) {
+      this.init();
+    } else if (this.cursorEl) {
+      this.cursorEl.style.display = 'none';
+    }
+  }
+
+  init() {
+    window.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.clientX;
+      this.mouse.y = e.clientY;
+      if (this.cursorEl && !this.cursorEl.classList.contains('is-active')) {
+        this.cursorEl.classList.add('is-active');
+      }
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      if (this.cursorEl) this.cursorEl.classList.remove('is-active');
+    });
+
+    this.bindHoverElements();
+    this.renderLoop();
+  }
+
+  setState(state, label = '') {
+    this.state = state;
+    if (!this.cursorEl) return;
+
+    this.cursorEl.className = 'is-active';
+    if (state !== 'DEFAULT') {
+      this.cursorEl.classList.add(`cursor-${state.toLowerCase()}`);
+    }
+    if (this.cursorLabel) {
+      this.cursorLabel.textContent = label;
+      this.cursorLabel.style.display = label ? 'block' : 'none';
+    }
+  }
+
+  bindHoverElements() {
+    // Spatial Tunnel in Hero
+    const tunnel = document.getElementById('obTunnel');
+    if (tunnel) {
+      tunnel.addEventListener('mouseenter', () => this.setState('DRAG', 'EXPLORAR'));
+      tunnel.addEventListener('mouseleave', () => this.setState('DEFAULT'));
+    }
+
+    // Parabolic Ribbon
+    const viewport = document.getElementById('conveyorViewport');
+    if (viewport) {
+      viewport.addEventListener('mouseenter', () => this.setState('DRAG', 'DRAG'));
+      viewport.addEventListener('mouseleave', () => this.setState('DEFAULT'));
+    }
+
+    // 3D ORBIT over Reformer Canvas
+    const reformerBox = document.getElementById('reformerCanvasContainer') || document.getElementById('reformerCanvas');
+    if (reformerBox) {
+      reformerBox.addEventListener('mouseenter', () => this.setState('ORBIT', '360°'));
+      reformerBox.addEventListener('mouseleave', () => this.setState('DEFAULT'));
+    }
+
+    // Workflow Canvas Board
+    const workflowBoard = document.getElementById('workflowBoard');
+    if (workflowBoard) {
+      workflowBoard.addEventListener('mouseenter', () => this.setState('POINTER', 'CONECTAR'));
+      workflowBoard.addEventListener('mouseleave', () => this.setState('DEFAULT'));
+    }
+
+    // Interactive Buttons, Links & Cards
+    document.querySelectorAll('button, a, .deck-satellite, .reformer-bed, .cal-day-btn, .workflow-node').forEach(el => {
+      el.addEventListener('mouseenter', () => this.setState('POINTER'));
+      el.addEventListener('mouseleave', () => this.setState('DEFAULT'));
+    });
+  }
+
+  renderLoop() {
+    this.pos.x += (this.mouse.x - this.pos.x) * this.lerpFactor;
+    this.pos.y += (this.mouse.y - this.pos.y) * this.lerpFactor;
+
+    if (this.cursorEl) {
+      this.cursorEl.style.transform = `translate3d(${this.pos.x}px, ${this.pos.y}px, 0) translate(-50%, -50%)`;
+    }
+
+    requestAnimationFrame(() => this.renderLoop());
+  }
+}
+
+/**
+ * Open Break — Parabolic Ribbon (Sprint 01 / UX-08)
+ * Parabolic spatial film strip with momentum drag, inertia damping, keyboard accessibility,
+ * snap physics, and strict prefers-reduced-motion compliance.
+ */
+class ParabolicRibbon {
+  constructor(viewportId, trackId) {
+    this.viewport=document.getElementById(viewportId);
+    this.track=document.getElementById(trackId);
+    if(!this.viewport||!this.track)return;
+    this.motion=window.matchMedia('(prefers-reduced-motion: reduce)');
+    this.originals=[...this.track.querySelectorAll('.ribbon-card')];
+    this.originals.forEach(card=>{
+      const clone=card.cloneNode(true);
+      clone.removeAttribute('id');clone.setAttribute('aria-hidden','true');
+      this.track.appendChild(clone);
+    });
+    this.cards=[...this.track.querySelectorAll('.ribbon-card')];
+    this.offset=0;this.target=0;this.velocity=0;this.autoSpeed=30;
+    this.isDragging=false;this.hover=false;this.visible=true;this.paused=false;this.lastTime=performance.now();
+    this.measure();
+    this.init();
+  }
+  measure(){
+    this.positionCache=this.cards.map(card=>({element:card,left:card.offsetLeft,width:card.offsetWidth}));
+    this.period=this.cards[this.originals.length]?.offsetLeft-this.cards[0]?.offsetLeft || this.track.scrollWidth/2;
+  }
+  init(){
+    this.viewport.setAttribute('tabindex','0');
+    this.viewport.setAttribute('aria-label','Galería de escenas de estudio. Desplázate con las flechas o arrastra para explorar.');
+    this.viewport.addEventListener('pointerdown',e=>{
+      if(e.button!==0)return;
+      this.isDragging=true;this.startX=e.clientX;this.startOffset=this.offset;this.lastX=e.clientX;this.lastPointerTime=performance.now();this.velocity=0;
+      this.viewport.classList.add('is-dragging');
+      this.viewport.setPointerCapture?.(e.pointerId);
+    });
+    this.viewport.addEventListener('pointermove',e=>{
+      if(!this.isDragging)return;
+      const now=performance.now(),dt=Math.max(now-this.lastPointerTime,1);
+      this.target=this.startOffset-(e.clientX-this.startX);
+      this.velocity=Math.max(-1400,Math.min(1400,(this.lastX-e.clientX)/dt*1000));
+      this.lastX=e.clientX;this.lastPointerTime=now;
+    });
+    const release=()=>{
+      this.isDragging=false;
+      this.viewport.classList.remove('is-dragging');
+    };
+    this.viewport.addEventListener('pointerup',release);
+    this.viewport.addEventListener('pointercancel',release);
+    this.viewport.addEventListener('mouseenter',()=>this.hover=true);
+    this.viewport.addEventListener('mouseleave',()=>this.hover=false);
+    this.viewport.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+        e.preventDefault();
+        this.velocity=e.key==='ArrowRight'?420:-420;
+        this.paused=true;
+        this.updateButton();
+      }
+    });
+    this.pauseButton=document.getElementById('pauseRibbonButton');
+    this.pauseButton?.addEventListener('click',()=>{
+      this.paused=!this.paused;
+      this.velocity=0;
+      this.updateButton();
+    });
+    this.updateButton();
+    new ResizeObserver(()=>this.measure()).observe(this.viewport);
+    if('IntersectionObserver'in window)new IntersectionObserver(entries=>{this.visible=entries[0].isIntersecting;},{threshold:.03}).observe(this.viewport);
+    document.addEventListener('visibilitychange',()=>{this.lastTime=performance.now();});
+    this.motion.addEventListener?.('change',()=>{this.updateButton();});
+    requestAnimationFrame(t=>this.loop(t));
+  }
+  updateButton(){
+    if(this.pauseButton){
+      const stopped=this.paused||this.motion.matches;
+      this.pauseButton.textContent=stopped?'Reanudar movimiento':'Pausar movimiento';
+      this.pauseButton.setAttribute('aria-pressed',String(stopped));
+    }
+  }
+  loop(t){
+    const dt=Math.min((t-this.lastTime)/1000,.05);this.lastTime=t;
+    if(this.visible&&!document.hidden){
+      if(this.isDragging){
+        this.offset+=(this.target-this.offset)*Math.min(1,dt*24);
+      } else if(Math.abs(this.velocity)>4){
+        this.offset+=this.velocity*dt;
+        this.velocity*=Math.pow(.90,dt*60); // smooth momentum decay
+      } else if(!this.paused&&!this.motion.matches&&!this.hover){
+        this.offset+=this.autoSpeed*dt;
+      }
+      
+      if(this.period>0){
+        this.offset=((this.offset%this.period)+this.period)%this.period;
+      }
+      this.track.style.transform=`translate3d(${-this.offset}px,0,0)`;
+      const center=this.viewport.clientWidth/2;
+      const scale=Math.max(this.viewport.clientWidth*.52,1);
+      
+      this.positionCache.forEach(({element,left,width})=>{
+        const norm=Math.max(-1.6,Math.min(1.6,(left-this.offset+width/2-center)/scale));
+        // Parabolic depth curve with subtle 3D y-axis rotation
+        const zDepth = -norm * norm * 125;
+        const yRot = -norm * 14;
+        element.style.transform=`translate3d(0,0,${zDepth.toFixed(1)}px) rotateY(${yRot.toFixed(1)}deg)`;
+      });
+    }
+    requestAnimationFrame(next=>this.loop(next));
+  }
+}
+
+/**
+ * Open Break — Interactive Workflow Canvas (Sprint 03 / UX-06 Complete)
+ * Dynamic reactive node-to-node choreography with SVG Bézier curves,
+ * live pulse packet travel, keyboard step navigation, and reduced-motion safety.
+ */
+class StudioWorkflowCanvas {
+  constructor(boardId) {
+    this.board = document.getElementById(boardId);
+    if (!this.board) return;
+    this.nodes = Array.from(this.board.querySelectorAll('.workflow-node'));
+    this.wires = {
+      '0-1': document.getElementById('wire-1-2'),
+      '1-2': document.getElementById('wire-2-3'),
+      '2-3': document.getElementById('wire-3-4')
+    };
+    this.pulseDot = document.getElementById('wirePulseDot');
+    this.idxEl = document.getElementById('workflowActiveIndex');
+    this.titleEl = document.getElementById('workflowActiveTitle');
+    this.descEl = document.getElementById('workflowActiveDescription');
+    this.prevBtn = document.getElementById('workflowPrev');
+    this.nextBtn = document.getElementById('workflowNext');
+
+    this.steps = [
+      {
+        index: '01',
+        title: 'Tu clase, en orden.',
+        desc: 'El estudio publica sus lugares y las alumnas eligen un horario disponible con cupo verificado en tiempo real.'
+      },
+      {
+        index: '02',
+        title: 'Asignación atómica de cupo.',
+        desc: 'El motor simula la reserva inmediata con control estricto de concurrencia y prevención de sobrecupos.'
+      },
+      {
+        index: '03',
+        title: 'Reasignación autónoma por lista de espera.',
+        desc: 'Ante una cancelación con aviso >12h, el cupo se promueve de forma determinista a la siguiente alumna elegible en la fila FIFO.'
+      },
+      {
+        index: '04',
+        title: 'Recepción y Check-in 1-Tap.',
+        desc: 'La alumna confirma su llegada en iPad o mediante escaneo de pase digital sin saturar la recepción del estudio.'
+      }
+    ];
+
+    this.activeStep = 0;
+    this.init();
+  }
+
+  init() {
+    this.nodes.forEach((node, idx) => {
+      node.addEventListener('click', () => this.selectStep(idx));
+      node.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.selectStep(idx);
+        }
+      });
+    });
+
+    this.prevBtn?.addEventListener('click', () => {
+      const nextIdx = (this.activeStep - 1 + this.steps.length) % this.steps.length;
+      this.selectStep(nextIdx);
+    });
+
+    this.nextBtn?.addEventListener('click', () => {
+      const nextIdx = (this.activeStep + 1) % this.steps.length;
+      this.selectStep(nextIdx);
+    });
+
+    window.addEventListener('resize', () => this.renderWires());
+    this.renderWires();
+    this.selectStep(0);
+  }
+
+  selectStep(idx) {
+    this.activeStep = idx;
+    this.nodes.forEach((node, i) => {
+      const isCurrent = i === idx;
+      node.setAttribute('aria-pressed', String(isCurrent));
+      node.classList.toggle('active', isCurrent);
+      node.classList.toggle('is-active', isCurrent);
+      node.classList.toggle('passed', i < idx);
+    });
+
+    const stepData = this.steps[idx];
+    if (this.idxEl) this.idxEl.textContent = stepData.index;
+    if (this.titleEl) this.titleEl.textContent = stepData.title;
+    if (this.descEl) this.descEl.textContent = stepData.desc;
+
+    this.updateWiresActivity(idx);
+    this.renderWires();
+  }
+
+  updateWiresActivity(activeIdx) {
+    Object.keys(this.wires).forEach(key => {
+      const wire = this.wires[key];
+      if (!wire) return;
+      const [from, to] = key.split('-').map(Number);
+      if (activeIdx >= to) {
+        wire.classList.add('wire-passed');
+        wire.classList.remove('wire-active');
+      } else if (activeIdx === from) {
+        wire.classList.add('wire-active');
+        wire.classList.remove('wire-passed');
+      } else {
+        wire.classList.remove('wire-active');
+        wire.classList.remove('wire-passed');
+      }
+    });
+  }
+
+  renderWires() {
+    if (!this.board) return;
+    const boardRect = this.board.getBoundingClientRect();
+    if (boardRect.width < 10) return;
+
+    for (let i = 0; i < this.nodes.length - 1; i++) {
+      const n1 = this.nodes[i];
+      const n2 = this.nodes[i + 1];
+      const wire = this.wires[`${i}-${i+1}`];
+      if (!n1 || !n2 || !wire) continue;
+
+      const r1 = n1.getBoundingClientRect();
+      const r2 = n2.getBoundingClientRect();
+
+      const x1 = r1.left + r1.width / 2 - boardRect.left;
+      const y1 = r1.top + r1.height / 2 - boardRect.top;
+      const x2 = r2.left + r2.width / 2 - boardRect.left;
+      const y2 = r2.top + r2.height / 2 - boardRect.top;
+
+      const dx = (x2 - x1) * 0.5;
+      const pathData = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+      wire.setAttribute('d', pathData);
+    }
+  }
+}
+
+/**
+ * OPEN BREAK — Reformer Studio Viewer (Sprint 05)
+ * Realistic studio visualization with PBR materials, contact shadows, carriage glide kinematics,
+ * dynamic spring elongation physics, responsive canvas handling, and graceful photography fallback.
+ */
+class ReformerStudioViewer {
+  constructor(canvasId,fallbackId){
+    this.canvas=document.getElementById(canvasId);
+    this.fallback=document.getElementById(fallbackId);
+    if(!this.canvas)return;
+    this.motion=window.matchMedia('(prefers-reduced-motion: reduce)');
+    this.dragging=false;this.visible=false;
+    this.rotation={x:.12,y:.62};this.target={x:.12,y:.62};
+    this.carriage=0;this.carriageTarget=0;this.springTension=1;
+    this.springs=[];
+    this.carriageGroup=null;
+    this.glbCarriageNode=null;
+    this.glbSpringNodes=[];
+    this.init();
+  }
+  init(){
+    try {
+      if(typeof THREE==='undefined')throw new Error('Three.js no cargó');
+      if(!this.canvas.getContext('webgl')&&!this.canvas.getContext('experimental-webgl'))throw new Error('WebGL no disponible');
+      this.setup();
+      this.loadGlbOrFallback();
+      this.bind();
+      this.resize();
+      this.observer=new IntersectionObserver(entries=>{this.visible=entries[0].isIntersecting;},{threshold:.06});
+      this.observer.observe(this.canvas.parentElement);
+      document.addEventListener('visibilitychange',()=>{this.lastFrame=performance.now();});
+      this.animate();
+    } catch(err){console.warn('Open Break: vista 3D sustituida por imagen:',err.message);this.fallbackMode();}
+  }
+  loadGlbOrFallback(){
+    // P1-01 AUD-012 Fix: Mutually exclusive GLB load or procedural fallback (never overlay both)
+    let glbLoaded = false;
+    if(typeof THREE.GLTFLoader !== 'undefined' || typeof window.GLTFLoader !== 'undefined'){
+      try {
+        const LoaderClass = THREE.GLTFLoader || window.GLTFLoader;
+        const loader = new LoaderClass();
+        loader.load(
+          'assets/reformer_studio.glb',
+          (gltf) => {
+            if(gltf && gltf.scene){
+              // Clear procedural geometries if GLB loaded successfully
+              if(this.proceduralGroup){
+                this.model.remove(this.proceduralGroup);
+                this.proceduralGroup = null;
+              }
+              this.glbScene = gltf.scene;
+              this.model.add(this.glbScene);
+              this.glbScene.scale.set(1.1, 1.1, 1.1);
+              this.glbScene.position.set(0, 0.45, 0);
+
+              // P1-01 (AUD-013) Fix: Bind GLB nodes to interactive controls
+              this.glbCarriageNode = null;
+              this.glbSpringNodes = [];
+              this.glbScene.traverse(node => {
+                const name = node.name || '';
+                if (name === 'UpholsteredCarriage' || name.toLowerCase().includes('carriage')) {
+                  this.glbCarriageNode = node;
+                }
+                if (name.toLowerCase().includes('spring') || name === 'SteelTracksAndFootbar') {
+                  this.glbSpringNodes.push(node);
+                }
+              });
+            }
+          },
+          undefined,
+          (err) => {
+            console.info('OpenBreak 3D: Procedural fallback active (GLB deferred):', err?.message || err);
+          }
+        );
+      } catch(e) {
+        console.info('OpenBreak 3D: GLTFLoader load skipped, keeping procedural studio model:', e.message);
+      }
+    }
+    // Build procedural model as initial/baseline model (removed dynamically if GLB scene loads)
+    this.buildModel();
+  }
+  fallbackMode(){
+    this.fallback?.classList.add('active');this.canvas.style.display='none';
+    document.querySelectorAll('[data-reformer-control]').forEach(el=>{el.disabled=true;el.title='Controles disponibles solamente con WebGL';});
+  }
+  setup(){
+    this.scene=new THREE.Scene();
+    this.camera=new THREE.PerspectiveCamera(36,1,.1,100);
+    this.camera.position.set(4.8,3.7,7.4);this.camera.lookAt(0,.52,0);
+    this.renderer=new THREE.WebGLRenderer({canvas:this.canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.75));
+    this.renderer.setClearColor(0xFFFFFF,0);
+    if('outputEncoding'in this.renderer && 'sRGBEncoding'in THREE)this.renderer.outputEncoding=THREE.sRGBEncoding;
+    if('toneMapping'in this.renderer && 'ACESFilmicToneMapping'in THREE)this.renderer.toneMapping=THREE.ACESFilmicToneMapping;
+    if('toneMappingExposure'in this.renderer)this.renderer.toneMappingExposure=1.18;
+    
+    // Sophisticated 4-point studio lighting rig
+    this.scene.add(new THREE.HemisphereLight(0xffffff,0x7d6f5d,1.55));
+    const keyLight=new THREE.DirectionalLight(0xfff5e6,2.2);keyLight.position.set(-4.5,9.5,6.5);this.scene.add(keyLight);
+    const rimLight=new THREE.DirectionalLight(0xe0f2fe,1.25);rimLight.position.set(5.5,3.2,-5.5);this.scene.add(rimLight);
+    const fillLight=new THREE.DirectionalLight(0xffffff,.65);fillLight.position.set(1.2,2.4,6.2);this.scene.add(fillLight);
+    const softUnderLight=new THREE.DirectionalLight(0xe8e4dc,.35);softUnderLight.position.set(0,-3,0);this.scene.add(softUnderLight);
+
+    this.model=new THREE.Group();this.scene.add(this.model);
+    this.materials={
+      walnut:new THREE.MeshStandardMaterial({color:0x5e3a21,roughness:.48,metalness:.02}),
+      edge:new THREE.MeshStandardMaterial({color:0x342218,roughness:.58}),
+      brushed:new THREE.MeshStandardMaterial({color:0xbab8b2,roughness:.24,metalness:.82}),
+      steel:new THREE.MeshStandardMaterial({color:0x6c7070,roughness:.20,metalness:.90}),
+      upholstery:new THREE.MeshStandardMaterial({color:0x222422,roughness:.85,metalness:0}),
+      stitching:new THREE.MeshStandardMaterial({color:0xbdb6a7,roughness:.95}),
+      rope:new THREE.MeshStandardMaterial({color:0xbdb3a1,roughness:.88}),
+      orange:new THREE.MeshStandardMaterial({color:0xdb582f,metalness:.60,roughness:.26}),
+      yellow:new THREE.MeshStandardMaterial({color:0xbfa94e,metalness:.60,roughness:.26}),
+      rubber:new THREE.MeshStandardMaterial({color:0x121414,roughness:.78})
+    };
+  }
+  part(geometry,material,x=0,y=0,z=0,parent=this.model){
+    const mesh=new THREE.Mesh(geometry,material);mesh.position.set(x,y,z);parent.add(mesh);return mesh;
+  }
+  beam(w,h,l,x,y,z,mat,parent){return this.part(new THREE.BoxGeometry(w,h,l),mat,x,y,z,parent||this.model);}
+  tube(points,r,material,parent=this.model){
+    const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p)));
+    return this.part(new THREE.TubeGeometry(curve,Math.max(12,points.length*8),r,8,false),material,0,0,0,parent);
+  }
+  cylinder(r,h,x,y,z,mat,rotation=null,parent=this.model){
+    const part=this.part(new THREE.CylinderGeometry(r,r,h,24),mat,x,y,z,parent);
+    if(rotation)part.rotation.set(...rotation);
+    return part;
+  }
+  helix(radius,length,turns,x,y,z,mat){
+    class HelixCurve extends THREE.Curve{
+      getPoint(t){return new THREE.Vector3(Math.cos(t*Math.PI*2*turns)*radius,Math.sin(t*Math.PI*2*turns)*radius,length*(t-.5));}
+    }
+    return this.part(new THREE.TubeGeometry(new HelixCurve(),turns*16,.014,8,false),mat,x,y,z);
+  }
+  buildModel(){
+    const m=this.materials;
+    this.proceduralGroup = new THREE.Group();
+    this.model.add(this.proceduralGroup);
+    const pg = this.proceduralGroup;
+
+    // Ambient contact shadow disk beneath the reformer chassis
+    const shadowDisk=this.part(new THREE.CircleGeometry(3.6,72),new THREE.MeshBasicMaterial({color:0xBBB6A8,transparent:true,opacity:.14,depthWrite:false}),0,-.02,0,pg);
+    shadowDisk.rotation.x=-Math.PI/2;shadowDisk.scale.set(1,.74,1);
+    
+    // Chassis rails and longitudinal structure
+    for(const x of [-.79,.79]){
+      this.beam(.145,.19,4.84,x,.56,0,m.walnut,pg);
+      this.beam(.085,.045,4.65,x,.68,0,m.edge,pg);
+      this.beam(.055,.055,4.58,x*.88,.765,0,m.brushed,pg);
+      for(const z of [-2.05,2.05]){
+        this.beam(.11,.48,.13,x,.25,z,m.edge,pg);
+        this.cylinder(.08,.08,x,.065,z,m.rubber,null,pg);
+      }
+      this.cylinder(.053,4.55,x,.39,0,m.brushed,[Math.PI/2,0,0],pg);
+    }
+    for(const z of [-2.34,2.34]){
+      this.beam(1.72,.17,.19,0,.56,z,m.walnut,pg);
+      this.beam(1.60,.035,.08,0,.69,z,m.brushed);
+    }
+    // Carriage assembly with ergonomic padded platform, headrest and shoulder rests
+    this.carriageGroup=new THREE.Group();this.model.add(this.carriageGroup);
+    this.beam(1.42,.13,2.15,0,.8,-.26,m.edge,this.carriageGroup);
+    this.beam(1.33,.105,2.07,0,.906,-.26,m.upholstery,this.carriageGroup);
+    this.beam(1.34,.014,1.89,0,.963,-.27,m.upholstery,this.carriageGroup);
+    for(const x of [-.665,.665]){
+      this.beam(.015,.035,2.05,x,.947,-.26,m.stitching,this.carriageGroup);
+      for(const z of [-1.16,.63]){
+        this.cylinder(.115,.06,x,.705,z,m.steel,[0,0,Math.PI/2],this.carriageGroup);
+      }
+    }
+    this.beam(.51,.08,.43,0,1.00,-1.05,m.upholstery,this.carriageGroup);
+    for(const x of [-.37,.37]){
+      this.beam(.23,.28,.29,x,1.11,-.94,m.upholstery,this.carriageGroup);
+      this.beam(.27,.035,.33,x,1.25,-.94,m.stitching,this.carriageGroup);
+    }
+    // Articulated foot bar with padded rubber sleeve and locking pivots
+    for(const x of [-.75,.75]){
+      this.tube([[x,.68,1.84],[x,.92,2.05],[x,1.29,2.18]],.031,m.brushed);
+      this.cylinder(.08,.11,x,.69,1.84,m.steel,[Math.PI/2,0,0]);
+    }
+    this.cylinder(.047,1.58,0,1.29,2.18,m.rubber,[0,0,Math.PI/2]);
+    for(const x of [-.84,.84])this.cylinder(.056,.14,x,1.29,2.18,m.brushed,[0,0,Math.PI/2]);
+    
+    // Five progressive resistance spring coils (color-coded tension)
+    for(let i=0;i<5;i++){
+      const x=(i-2)*.225;
+      this.cylinder(.027,.13,x,.67,.94,m.steel,[Math.PI/2,0,0]);
+      const s=this.helix(.042,.70,14,x,.69,1.42,i===2?m.orange:m.steel);
+      this.springs.push(s);
+      this.cylinder(.04,.10,x,.68,1.82,m.brushed,[Math.PI/2,0,0]);
+    }
+    // Tower risers, pulley wheels, and braided nautical cord paths
+    for(const x of [-.64,.64]){
+      this.cylinder(.036,1.16,x,1.24,-2.25,m.brushed);
+      this.cylinder(.14,.09,x,1.84,-2.25,m.steel,[0,0,Math.PI/2]);
+      this.cylinder(.09,.11,x,1.84,-2.25,m.rubber,[0,0,Math.PI/2]);
+      this.tube([[x,1.83,-2.22],[x,2.06,-2.15],[x,2.10,-1.77],[x,1.86,-1.43]],.014,m.rope);
+      this.cylinder(.023,.25,x,1.80,-1.35,m.rubber,[0,0,Math.PI/2]);
+    }
+    // Studio metal brand plate at the foot of the carriage
+    this.beam(.39,.06,.012,0,.68,2.43,m.steel);
+    this.model.rotation.set(this.rotation.x,this.rotation.y,0);
+  }
+  bind(){
+    const down=e=>{if(e.button!==0)return;this.dragging=true;this.previous={x:e.clientX,y:e.clientY};this.canvas.setPointerCapture?.(e.pointerId)};
+    const move=e=>{if(!this.dragging)return;const dx=e.clientX-this.previous.x,dy=e.clientY-this.previous.y;this.target.y+=dx*.006;this.target.x=Math.max(-.27,Math.min(.56,this.target.x+dy*.006));this.previous={x:e.clientX,y:e.clientY};};
+    this.canvas.addEventListener('pointerdown',down);
+    this.canvas.addEventListener('pointermove',move);
+    this.canvas.addEventListener('pointerup',()=>this.dragging=false);
+    this.canvas.addEventListener('pointercancel',()=>this.dragging=false);
+    this.canvas.setAttribute('tabindex','0');
+    this.canvas.setAttribute('aria-label','Modelo tridimensional interactivo de un Reformer. Usa las flechas para girarlo.');
+    this.canvas.addEventListener('keydown',e=>{const amount=.15;if(e.key==='ArrowLeft')this.target.y-=amount;else if(e.key==='ArrowRight')this.target.y+=amount;else if(e.key==='ArrowUp')this.target.x=Math.max(-.27,this.target.x-amount);else if(e.key==='ArrowDown')this.target.x=Math.min(.56,this.target.x+amount);else return;e.preventDefault();});
+    this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(this.canvas.parentElement);
+    this.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.fallbackMode();});
+  }
+  resize(){
+    if(!this.renderer)return;
+    const rect=this.canvas.parentElement.getBoundingClientRect();
+    if(rect.width<1||rect.height<1)return;
+    this.camera.aspect=rect.width/rect.height;this.camera.updateProjectionMatrix();
+    this.renderer.setSize(rect.width,rect.height,false);
+  }
+  glideCarriage(){this.carriageTarget=this.carriageTarget>.1?0:.73;}
+  toggleSprings(){
+    this.springTension=this.springTension===1?2:1;
+    this.springs.forEach((s,i)=>{s.material=(i===2||this.springTension===2)?this.materials.orange:this.materials.steel;});
+    // In GLB mode, also modulate spring materials if present
+    this.glbSpringNodes.forEach(node => {
+      if (node.material) {
+        node.material.color?.setHex?.(this.springTension === 2 ? 0xdb582f : 0x6c7070);
+      }
+    });
+    this.glideCarriage();
+  }
+  resetCamera(){this.target={x:.12,y:.62};this.carriageTarget=0;}
+  animate(){
+    if(this.visible&&!document.hidden&&this.renderer){
+      const speed=this.motion.matches?1:.085;
+      this.rotation.x+=(this.target.x-this.rotation.x)*speed;
+      this.rotation.y+=(this.target.y-this.rotation.y)*speed;
+      this.model.rotation.set(this.rotation.x,this.rotation.y,0);
+      this.carriage+=(this.carriageTarget-this.carriage)*speed;
+      // Animate procedural carriage if active
+      if (this.carriageGroup) {
+        this.carriageGroup.position.z=this.carriage;
+      }
+      // Animate GLB carriage node if active (P1-01 AUD-013)
+      if (this.glbCarriageNode) {
+        this.glbCarriageNode.position.z=this.carriage;
+      }
+      this.springs.forEach(s=>{s.scale.z=1+this.carriage*.32;});
+      this.renderer.render(this.scene,this.camera);
+    }
+    this.rafId=requestAnimationFrame(()=>this.animate());
+  }
+
+  dispose(){
+    if(this.rafId) cancelAnimationFrame(this.rafId);
+    if(this.resizeObserver) this.resizeObserver.disconnect();
+    if(this.renderer){
+      this.renderer.dispose();
+      this.renderer.forceContextLoss();
+    }
+    if(this.scene){
+      this.scene.traverse(obj=>{
+        if(obj.geometry) obj.geometry.dispose();
+        if(obj.material){
+          if(Array.isArray(obj.material)) obj.material.forEach(m=>m.dispose());
+          else obj.material.dispose();
+        }
+      });
+    }
+  }
+}
+let cursorInstance,ribbonInstance,canvasInstance,reformerInstance;
+window.addEventListener('DOMContentLoaded',()=>{
+  cursorInstance=new ContextualCursor();
+  ribbonInstance=new ParabolicRibbon('conveyorViewport','ribbonTrack');
+  canvasInstance=new StudioWorkflowCanvas('workflowBoard');
+  reformerInstance=new ReformerStudioViewer('reformerCanvas','webglFallbackCard');
+  // Accurate mobile-drawer placement relative to the sticky navbar.
+  const nav=document.querySelector('.site-nav');
+  if(nav){const sync=()=>document.documentElement.style.setProperty('--mobile-drawer-top',nav.getBoundingClientRect().bottom+'px');sync();window.addEventListener('resize',sync,{passive:true});}
+});
+function triggerCarriageGlide(){reformerInstance?.glideCarriage()}
+function toggleReformerSprings(){reformerInstance?.toggleSprings()}
+function resetReformerCamera(){reformerInstance?.resetCamera()}
+</script>
+
+<script src="src/js/demo-store.js"></script>
+<script src="src/js/title-typewriter.js" defer></script>
+<script src="src/js/hero-tunnel.js" defer></script>
+<script src="src/js/motion-director.js" defer></script>
+<script src="src/js/schedule-sync.js" defer></script>
+<script src="src/js/analytics-engine.js" defer></script>
+<script src="src/js/scroll-choreography.js" defer></script>
+  <script>
+    // El motor de efectos se inicializa una sola vez en build_site.py.
+    let previousFocus = null;
+    function toggleMobileMenu(force) {
+      const drawer=document.getElementById('mobileDrawer');
+      const toggle=document.getElementById('mobileMenuBtn');
+      if (!drawer || !toggle) return;
+      const open=typeof force==='boolean' ? force : !drawer.classList.contains('open');
+      drawer.classList.toggle('open',open);
+      toggle.setAttribute('aria-expanded',String(open));
+      toggle.setAttribute('aria-label',open?'Cerrar menú de navegación':'Abrir menú de navegación');
+    }
+    document.addEventListener('click',e=>{
+      if(!e.target.closest('.site-nav,.mobile-drawer')) toggleMobileMenu(false);
+    });
+    function copyPreparedRequest() {
+      const lead=window.openbreakPreparedLead;
+      if(!lead) return;
+      const content=`Solicitud de demo Open Break\nNombre: ${lead.name}\nEstudio: ${lead.studio}\nDisciplina: ${lead.discipline}\nTeléfono: ${lead.phone}`;
+      if(navigator.clipboard?.writeText) navigator.clipboard.writeText(content).then(()=>{
+        const msg=document.getElementById('feedbackMessage');
+        if(msg) msg.textContent='Solicitud copiada. Aún no se ha enviado a Open Break.';
+      }).catch(()=>window.prompt('Copia tu solicitud:',content));
+      else window.prompt('Copia tu solicitud:',content);
+    }
+    // 4. THE 3D CASCADING SOLUTIONS DECK & SATELLITES
+    let currentDeckIndex = 0;
+    const totalDeckCards = 4;
+
+    function updateDeckPositions() {
+      for (let i = 0; i < totalDeckCards; i++) {
+        const card = document.getElementById('deck-card-' + i);
+        if (card) {
+          card.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-3', 'discarding');
+          const relativePos = (i - currentDeckIndex + totalDeckCards) % totalDeckCards;
+          card.classList.add('pos-' + relativePos);
+        }
+      }
+      document.querySelectorAll('.deck-satellite').forEach((sat, idx) => {
+        sat.classList.toggle('active', idx === currentDeckIndex);
+      });
+    }
+
+    function cycleDeckStack() {
+      const topCard = document.getElementById('deck-card-' + currentDeckIndex);
+      if (!topCard) return;
+      topCard.classList.add('discarding');
+      setTimeout(() => {
+        currentDeckIndex = (currentDeckIndex + 1) % totalDeckCards;
+        updateDeckPositions();
+      }, 250);
+    }
+
+    
+    // UX-06 Melius Style: Reactive Bézier wire calculator linking satellites to central deck
+    function updateDeckWires(activeIdx = 0) {
+      const arena = document.getElementById('solutionsDeckArena');
+      const container = document.querySelector('.deck-perspective-container');
+      if (!arena || !container || window.innerWidth <= 900) return;
+
+      const arenaRect = arena.getBoundingClientRect();
+      const contRect = container.getBoundingClientRect();
+      const targetX = contRect.left + contRect.width / 2 - arenaRect.left;
+      const targetY = contRect.top + contRect.height / 2 - arenaRect.top;
+
+      [0, 1, 2, 3].forEach(i => {
+        const sat = document.getElementById('sat-' + i);
+        const wire = document.getElementById('wire-' + i);
+        if (!sat || !wire) return;
+
+        const satRect = sat.getBoundingClientRect();
+        const startX = satRect.left + satRect.width / 2 - arenaRect.left;
+        const startY = satRect.top + satRect.height / 2 - arenaRect.top;
+
+        // Cubic Bézier curve with horizontal or vertical bias
+        const dx = targetX - startX;
+        const dy = targetY - startY;
+        const cp1x = startX + dx * 0.5;
+        const cp1y = startY;
+        const cp2x = startX + dx * 0.5;
+        const cp2y = targetY;
+
+        wire.setAttribute('d', `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`);
+        if (i === activeIdx) {
+          wire.classList.add('active');
+        } else {
+          wire.classList.remove('active');
+        }
+      });
+    }
+
+    window.addEventListener('resize', () => { updateDeckWires(window.currentDeckIndex || 0); });
+
+    function selectDeckCard(idx) {
+      currentDeckIndex = idx;
+      updateDeckPositions();
+    }
+
+    // 5. DEMO 1: CONCURRENCIA ATÓMICA (OB-05: Simulación interactiva transparente)
+    function runConcurrencyRace() {
+      const log = document.getElementById('concurrencyLog');
+      const hotBed = document.getElementById('hotBed');
+      const status = document.getElementById('bed8Status');
+      if (!log) return;
+      
+      log.innerHTML = '';
+      function addLine(text, cls = 'term-gray') {
+        const div = document.createElement('div');
+        div.className = 'terminal-line ' + cls;
+        div.textContent = text;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      addLine("⚡ [SIMULADOR DE CONCURRENCIA] Representando 3 solicitudes simultáneas...", "term-yellow");
+      addLine("[T0 + 0ms] Peticiones concurrentes recibidas para Cama 08:", "term-gray");
+      addLine("  → Req #8901: Alumna Camila M. (Pago con tarjeta en pasarela)", "term-gray");
+      addLine("  → Req #8902: Alumna Sofía R. (Consumo de 1 crédito en saldo)", "term-gray");
+      addLine("  → Req #8903: Alumna Lucía T. (Consumo de 1 crédito en saldo)", "term-gray");
+
+      setTimeout(() => {
+        addLine("[Paso 1] Bloqueo ilustrativo de PostgreSQL representado (Fila Cama 08):", "term-orange");
+        addLine("  > BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;", "term-yellow");
+        addLine("  > SELECT * FROM studio_slots WHERE slot_id = 'cama-08' FOR UPDATE;", "term-yellow");
+      }, 500);
+
+      setTimeout(() => {
+        addLine("[Paso 2] ASIGNACIÓN EXITOSA: Req #8901 (Camila M.)", "term-green");
+        addLine("  > INSERT INTO bookings (slot_id, user_id) VALUES ('cama-08', 'u-camila');", "term-yellow");
+        addLine("  > COMMIT;", "term-green");
+        
+        if (hotBed) {
+          hotBed.classList.remove('hot-contested');
+          hotBed.classList.add('occupied');
+        }
+        if (status) {
+          status.textContent = 'Ocupada (Camila)';
+          status.className = 'bed-status status-busy';
+        }
+      }, 1200);
+
+      setTimeout(() => {
+        addLine("[Paso 3] RECHAZO CONTROLADO: Req #8902 & #8903 (Cero sobrecupo)", "term-orange");
+        addLine("  > Excepción: SLOT_NOT_AVAILABLE. Despacho a waitlist determinista.", "term-gray");
+        addLine("  → Sofía R. inscrita como #1 en lista de espera autónoma.", "term-green");
+        addLine("  → Lucía T. inscrita como #2 en lista de espera autónoma.", "term-green");
+        addLine("✔ SIMULACIÓN: una plaza asignada, dos solicitudes no confirmadas.", "term-green");
+      }, 1900);
+    }
+
+    // 6. DEMO 2: WAITLIST CYCLE
+    function simulateWaitlistCycle() {
+      const steps = [
+        document.getElementById('step-1'),
+        document.getElementById('step-2'),
+        document.getElementById('step-3'),
+        document.getElementById('step-4')
+      ].filter(Boolean);
+      steps.forEach(s => s.classList.remove('active'));
+      
+      let cur = 0;
+      const interval = setInterval(() => {
+        steps.forEach(s => s.classList.remove('active'));
+        if (steps[cur]) steps[cur].classList.add('active');
+        cur++;
+        if (cur >= steps.length) clearInterval(interval);
+      }, 700);
+    }
+
+    // 7. DEMO 3: LEDGER INMUTABLE (V8.1.5: Real Transaction History & Unambiguous ID Selector)
+    function renderLedgerHistory() {
+      const store = window.OpenBreakStore;
+      const list = document.getElementById('ledgerHistory');
+      const display = document.getElementById('creditsDisplay');
+      const selector = document.getElementById('ledgerBookingSelector');
+      if (!list || !store) return;
+
+      list.innerHTML = '';
+      const txs = store.transactions || [];
+      // Render transactions in reverse chronological order
+      [...txs].reverse().forEach(tx => {
+        const item = document.createElement('div');
+        item.className = 'ledger-item';
+        item.style.display = 'flex';
+        item.style.justifyContent = 'space-between';
+        item.style.alignItems = 'center';
+        item.style.padding = '8px 0';
+        item.style.borderBottom = '1px solid rgba(0,0,0,0.05)';
+
+        const isPositive = tx.amount > 0;
+        const color = isPositive ? 'var(--accent-green)' : '#EF4444';
+        const sign = isPositive ? '+' : '';
+        const txShortId = tx.id ? tx.id.slice(-8) : 'tx_demo';
+        const studentLabel = tx.studentName ? ` · ${tx.studentName}` : '';
+
+        item.innerHTML = `
+          <div>
+            <div style="font-weight: 600; font-size: 0.85rem; color: var(--text-black);">${tx.description}${studentLabel}</div>
+            <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #A1A1AA;">ID: ${txShortId} · Ref: ${tx.refBookingId || 'N/A'}</div>
+          </div>
+          <span style="color: ${color}; font-family: var(--font-mono); font-weight: 700; font-size: 0.88rem;">${sign}${tx.amount} CR</span>
+        `;
+        list.appendChild(item);
+      });
+
+      if (display) display.textContent = store.credits + ' CR';
+
+      // P0-02 (AUD-013) Fix: Update explicit refundable booking selector
+      if (selector) {
+        const prevVal = selector.value;
+        selector.innerHTML = '';
+        
+        // Find all active refundable bookings
+        const activeRefundable = [];
+        if (store.bookingsById) {
+          for (const b of store.bookingsById.values()) {
+            if ((b.status === 'CONFIRMED' || b.status === 'CONFIRMED_FROM_WAITLIST') && b.refundable !== false) {
+              activeRefundable.push(b);
+            }
+          }
+        }
+
+        if (activeRefundable.length === 0) {
+          const opt = document.createElement('option');
+          opt.value = '';
+          opt.textContent = '(Sin reservas activas reembolsables)';
+          selector.appendChild(opt);
+          selector.disabled = true;
+        } else {
+          selector.disabled = false;
+          activeRefundable.forEach((b, idx) => {
+            const opt = document.createElement('option');
+            opt.value = b.bookingId;
+            opt.textContent = `${b.studentName || 'Alumna'} — ${b.classId} (${b.bookingId.slice(-8)})`;
+            selector.appendChild(opt);
+          });
+          if (prevVal && activeRefundable.some(b => b.bookingId === prevVal)) {
+            selector.value = prevVal;
+          } else {
+            selector.value = activeRefundable[activeRefundable.length - 1].bookingId;
+          }
+        }
+      }
+    }
+
+    function addLedgerMovement(type) {
+      const store = window.OpenBreakStore;
+      const warning = document.getElementById('ledgerWarning');
+      const selector = document.getElementById('ledgerBookingSelector');
+      if (!store) return;
+
+      if (type === 'book') {
+        const res = store.ledgerBookSpot();
+        if (!res.success) return;
+        if (warning) warning.style.display = 'none';
+      } else if (type === 'refund') {
+        // P0-02 (AUD-013) Fix: Pass targeted bookingId explicitly from UI selector
+        const targetId = selector?.value || null;
+        const res = store.ledgerRefundSpot(targetId);
+        if (!res.success) {
+          if (warning) {
+            if (res.reason === 'ambiguous_refund_target') {
+              warning.textContent = 'ℹ Invariante protegida: Selección ambigua. Especifica la reserva a reembolsar.';
+            } else {
+              warning.textContent = 'ℹ Invariante protegida: No es posible revertir sin una reserva activa previa.';
+            }
+            warning.style.display = 'block';
+            setTimeout(() => { warning.style.display = 'none'; }, 4000);
+          }
+          return;
+        }
+        if (warning) warning.style.display = 'none';
+      }
+      renderLedgerHistory();
+      if (typeof announceToScreenReader === 'function') {
+        announceToScreenReader(`Transacción contable registrada: ${type === 'book' ? 'Reserva -1 crédito' : 'Reverso +1 crédito'}. Saldo actual: ${store.credits} créditos.`);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => updateDeckWires(0), 100);
+      renderLedgerHistory();
+    });
+    window.addEventListener('openbreak:state-changed', () => {
+      renderLedgerHistory();
+    });
+
+    // 8. DEMO 4: CHECK-IN QR
+    function testQrScan() {
+      const state = document.getElementById('scannerState');
+      const title = document.getElementById('scannerTitle');
+      const desc = document.getElementById('scannerDesc');
+      if (!state) return;
+
+      state.style.borderColor = 'var(--accent-green)';
+      state.style.background = '#ECFDF5';
+      title.textContent = '¡Check-in Confirmado!';
+      desc.textContent = 'Alumna: Sofía R. · Cama Reformer #04 reservada. ¡Bienvenida!';
+
+      setTimeout(() => {
+        state.style.borderColor = 'var(--accent-orange)';
+        state.style.background = '#FFF8F5';
+        title.textContent = 'Lector QR Activo';
+        desc.textContent = 'Escanea el pase dinámico de la alumna desde su celular.';
+      }, 3500);
+    }
+
+    // 9. FAQ ACCORDION
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('is-open') || item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('is-open');
+        i.classList.remove('open');
+        const trigger = i.querySelector('.faq-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('is-open');
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    // 10. MODAL DE DEMO Y PERSISTENCIA (OB-03, OB-14: Con escape, localStorage y UI real)
+    function openDemoModal() {
+      const modal = document.getElementById('demoModal');
+      const formContainer = document.getElementById('modalFormContainer');
+      const feedback = document.getElementById('modalFeedback');
+      if (modal) {
+        previousFocus = document.activeElement;
+        modal.style.display = 'flex';
+        setTimeout(()=>modal.querySelector('.modal-close')?.focus(), 0);
+        if (formContainer) formContainer.style.display = 'block';
+        if (feedback) feedback.classList.remove('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeDemoModal() {
+      const modal = document.getElementById('demoModal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        previousFocus?.focus?.();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDemoModal();
+    });
+
+    // P0-03 & P0-04 Fix: Secure DOM nodes (no innerHTML), explicit transmission states, zero false catch success
+    async function handleDemoSubmit(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('demoName');
+      const studioInput = document.getElementById('demoStudio');
+      const disciplineInput = document.getElementById('demoDiscipline');
+      const phoneInput = document.getElementById('demoPhone');
+      const consentInput = document.getElementById('demoConsent');
+
+      const name = (nameInput?.value || '').trim();
+      const studio = (studioInput?.value || '').trim();
+      const discipline = (disciplineInput?.value || '').trim();
+      const phone = (phoneInput?.value || '').trim();
+      const consent = consentInput?.checked;
+
+      if (!consent) {
+        alert('Por favor confirma tu consentimiento para ser contactado.');
+        return;
+      }
+
+      // Input sanitization & length limits
+      if (name.length < 2 || name.length > 80 || studio.length < 2 || studio.length > 80) {
+        alert('Por favor ingresa un nombre y estudio válidos (máximo 80 caracteres).');
+        return;
+      }
+
+      const submitBtn = document.getElementById('btnSubmitLead');
+      const submitText = document.getElementById('btnSubmitLeadText');
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitText) submitText.textContent = 'Enviando solicitud...';
+
+      const leadId = 'lead_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6);
+      const leadData = {
+        leadId,
+        name,
+        studio,
+        discipline,
+        phone,
+        consentGiven: true,
+        timestamp: new Date().toISOString(),
+        clientVersion: 'V8.1.5'
+      };
+
+      let statusMode = 'demo_prepared';
+      let serverConfirmed = false;
+
+      try {
+        if (window.fetch && window.location.protocol.startsWith('http')) {
+          const res = await fetch('/api/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(leadData)
+          });
+          if (res.ok) {
+            serverConfirmed = true;
+            statusMode = 'server_confirmed';
+          } else {
+            statusMode = 'server_error';
+          }
+        } else {
+          // Running in offline / file:// / static preview mode: explicitly transparent demo mode
+          statusMode = 'offline_demo';
+        }
+      } catch (err) {
+        // Network failure or backend unreachable: do NOT fake server confirmation
+        statusMode = 'network_error';
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitText) submitText.textContent = 'Solicitar demostración';
+      }
+
+      window.openbreakPreparedLead = leadData;
+      // P1-10: Do NOT store raw phone numbers or personal PII in permanent localStorage without explicit consent
+      // Instead, keep in memory on window object only for this active session.
+
+      const formContainer = document.getElementById('modalFormContainer');
+      const feedback = document.getElementById('modalFeedback');
+      const summaryEl = document.getElementById('preparedLeadSummary');
+      const feedbackMsg = document.getElementById('feedbackMessage');
+
+      if (formContainer) formContainer.style.display = 'none';
+      if (feedback) feedback.classList.add('active');
+
+      if (statusMode === 'server_confirmed') {
+        if (feedbackMsg) feedbackMsg.textContent = '✔ Confirmado por el servidor: Tu solicitud fue recibida formalmente por Open Break.';
+      } else if (statusMode === 'server_error' || statusMode === 'network_error') {
+        if (feedbackMsg) feedbackMsg.textContent = 'Nota técnica: El servidor central no está disponible en este momento. Hemos formateado tu solicitud localmente para canal directo de WhatsApp.';
+      } else {
+        if (feedbackMsg) feedbackMsg.textContent = 'Modo Demostración / Vista previa local: Solicitud formateada sin transmisión externa.';
+      }
+
+      // P0-04: Secure DOM node generation - ZERO innerHTML interpolation of user input
+      if (summaryEl) {
+        summaryEl.textContent = ''; // clear safely
+        
+        const rowId = document.createElement('div');
+        const strongId = document.createElement('strong');
+        strongId.textContent = 'ID de Solicitud: ';
+        rowId.appendChild(strongId);
+        rowId.appendChild(document.createTextNode(leadId));
+        summaryEl.appendChild(rowId);
+
+        const rowStudio = document.createElement('div');
+        const strongStudio = document.createElement('strong');
+        strongStudio.textContent = 'Estudio: ';
+        rowStudio.appendChild(strongStudio);
+        rowStudio.appendChild(document.createTextNode(studio));
+        summaryEl.appendChild(rowStudio);
+
+        const rowContact = document.createElement('div');
+        const strongContact = document.createElement('strong');
+        strongContact.textContent = 'Contacto: ';
+        rowContact.appendChild(strongContact);
+        rowContact.appendChild(document.createTextNode(`${name} · ${phone}`));
+        summaryEl.appendChild(rowContact);
+
+        const rowDisc = document.createElement('div');
+        const strongDisc = document.createElement('strong');
+        strongDisc.textContent = 'Disciplina: ';
+        rowDisc.appendChild(strongDisc);
+        rowDisc.appendChild(document.createTextNode(discipline));
+        summaryEl.appendChild(rowDisc);
+      }
+    }
+
+    function sendViaWhatsApp() {
+      const lead = window.openbreakPreparedLead;
+      if (!lead) return;
+      const text = encodeURIComponent(`¡Hola equipo de Open Break! Me interesa una demostración para mi estudio.\n\n• Solicitud: ${lead.leadId}\n• Estudio: ${lead.studio}\n• Contacto: ${lead.name}\n• Disciplina: ${lead.discipline}\n• Teléfono: ${lead.phone}`);
+      // P1-10: Clearly identified support inquiry link
+      window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener,noreferrer');
+    }
+
+
+    // Cerrar por clic fuera del diálogo; no cerrar al pulsar dentro.
+    document.getElementById('demoModal')?.addEventListener('mousedown',function(e){if(e.target===this)closeDemoModal();});
+    document.getElementById('demoModal')?.addEventListener('keydown',function(e){
+      if(e.key!=='Tab') return;
+      const focusables=Array.from(this.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href]')).filter(x=>x.offsetParent!==null);
+      if(!focusables.length) return;
+      const first=focusables[0], last=focusables[focusables.length-1];
+      if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+      if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
+    });
+
+    // Facturación dinámica Mensual vs Anual (20% de descuento)
+    let isAnnualBilling = false;
+    function toggleBillingCycle() {
+      isAnnualBilling = !isAnnualBilling;
+      const btn = document.getElementById('billingToggleBtn');
+      const knob = document.getElementById('billingToggleKnob');
+      const labelMonthly = document.getElementById('billingLabelMonthly');
+      const labelAnnual = document.getElementById('billingLabelAnnual');
+      const priceSolo = document.getElementById('planPriceSolo');
+      const periodSolo = document.getElementById('planPeriodSolo');
+      const priceMulti = document.getElementById('planPriceMulti');
+      const periodMulti = document.getElementById('planPeriodMulti');
+
+      if (btn) {
+        btn.setAttribute('aria-checked', String(isAnnualBilling));
+        btn.style.background = isAnnualBilling ? 'var(--accent-orange)' : '#E4E4E7';
+      }
+      if (knob) {
+        knob.style.transform = isAnnualBilling ? 'translateX(22px)' : 'translateX(0)';
+      }
+      if (labelMonthly && labelAnnual) {
+        labelMonthly.style.color = isAnnualBilling ? 'var(--text-editorial)' : 'var(--text-black)';
+        labelAnnual.style.color = isAnnualBilling ? 'var(--text-black)' : 'var(--text-editorial)';
+      }
+
+      if (priceSolo && periodSolo) {
+        priceSolo.childNodes[0].nodeValue = isAnnualBilling ? '$1,512 ' : '$1,890 ';
+        periodSolo.textContent = isAnnualBilling ? 'MXN/mes (facturado anual)' : 'MXN/mes · propuesto';
+      }
+      if (priceMulti && periodMulti) {
+        priceMulti.childNodes[0].nodeValue = isAnnualBilling ? '$2,792 ' : '$3,490 ';
+        periodMulti.textContent = isAnnualBilling ? 'MXN/mes (facturado anual)' : 'MXN/mes · propuesto';
+      }
+    }
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "version": "V8.1.5",
+  "audit_version": "AUD-015",
+  "git_commit": "2dbdbb3",
+  "status": "APPROVED",
+  "evaluated_at": "2026-10-27T20:35:00Z",
+  "audit_compliance": {
+    "P0_01_abolition_global_gate": "RESOLVED",
+    "P0_02_pure_read_queries_explicit_tx": "RESOLVED",
+    "P0_03_mandatory_recharge_tx_ledger_conservation": "RESOLVED",
+    "P1_04_fifo_waitlist_governance_insolvent_bypass": "RESOLVED",
+    "P1_05_workflow_nodes_css_active_sync": "RESOLVED",
+    "P1_06_gltf_hierarchy_parsing_node_resolution": "RESOLVED",
+    "P1_07_static_contract_classification": "RESOLVED",
+    "P1_08_honest_simulation_copy_disclaimers": "RESOLVED",
+    "AUD_017_visual_geometry_reformer_pro": "RESOLVED",
+    "AUD_018_scroll_choreography_motion_director": "RESOLVED"
+  },
+  "metrics": {
+    "fast_audits_passed": 25,
+    "fast_audits_total": 25,
+    "century_qa_passed": 100,
+    "century_qa_total": 100,
+    "pass_rate": "100%",
+    "offline_portable_verified": true
+  },
+  "deliverables": [
+    "OpenBreak_Cinematic_V8_1_5_Proyecto_Completo.zip",
+    "OpenBreak_Cinematic_V9_0_0_Proyecto_Completo.zip",
+    "landing_melius_style.html",
+    "docs.html",
+    "CHANGELOG_V8_1_5.md",
+    "CHANGELOG_V9_0_0.md",
+    "AUDIT_015_COMPLIANCE_REPORT.json",
+    "docs/DICTAMEN_Y_CERTIFICACION_AUD-015_V8_1_5.md",
+    "docs/POLITICA_LISTA_DE_ESPERA_FIFO.md",
+    "docs/PLAN_MAESTRO_SALTO_VISUAL_V9_0_0.md",
+    "run_all_audits.sh",
+    "scripts/run_fast_audits.sh"
+  ]
+}
