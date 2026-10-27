@@ -1,0 +1,49 @@
+/** Open Break Cinematic - Sprint 02 Motion Tokens & Scroll Director Styles */
+:root {
+  --ob-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ob-ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+  --ob-dur-fast: 300ms;
+  --ob-dur-med: 600ms;
+  --ob-dur-slow: 900ms;
+}
+
+/* Scroll reveal atomic classes managed by motion-director.js */
+.ob-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity var(--ob-dur-med) var(--ob-ease-out-expo),
+              transform var(--ob-dur-med) var(--ob-ease-out-expo);
+  will-change: opacity, transform;
+}
+
+.ob-reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ob-reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--ob-dur-med) var(--ob-ease-out-expo),
+              transform var(--ob-dur-med) var(--ob-ease-out-expo);
+}
+
+.ob-reveal-stagger.is-revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ob-reveal-stagger.is-revealed > *:nth-child(1) { transition-delay: 60ms; }
+.ob-reveal-stagger.is-revealed > *:nth-child(2) { transition-delay: 130ms; }
+.ob-reveal-stagger.is-revealed > *:nth-child(3) { transition-delay: 200ms; }
+.ob-reveal-stagger.is-revealed > *:nth-child(4) { transition-delay: 270ms; }
+.ob-reveal-stagger.is-revealed > *:nth-child(5) { transition-delay: 340ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ob-reveal,
+  .ob-reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

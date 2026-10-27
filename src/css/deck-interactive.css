@@ -1,0 +1,40 @@
+/** Open Break — Interactive 3D Solutions Deck (Melius Parity) */
+.deck-perspective-container:hover .deck-stack-wrapper {
+  transform: rotateX(12deg) rotateY(-4deg);
+}
+
+.deck-satellite {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease,
+              background 0.35s ease;
+}
+
+.deck-satellite:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(234, 88, 12, 0.5);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(234, 88, 12, 0.2);
+}
+
+.deck-satellite.active {
+  border-color: var(--accent-orange, #ea580c) !important;
+  background: #FFF5EE !important;
+  box-shadow: 0 10px 24px -4px rgba(234, 88, 12, 0.2) !important;
+}
+
+.deck-satellite.active .deck-satellite-title {
+  color: var(--accent-orange, #ea580c);
+}
+
+/* Subtle glassmorphism highlight sheen on frontmost active card */
+.deck-child-card.pos-0::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  border-radius: 24px 24px 0 0;
+}

@@ -1,0 +1,23 @@
+  <!-- Atelier workflow: diseño editorial 2.5D con flujo interactivo (demostración de procesos, no backend) -->
+  <section class="workflow-canvas-section workflow-section-v7" id="canvas-section" aria-labelledby="workflow-heading">
+    <div class="workflow-intro">
+      <div class="workflow-intro-side"><span class="tiny-index">Open Break / en movimiento</span><span class="tiny-line"></span><span class="tiny-index">Una jornada, cuatro momentos</span></div>
+      <div><h2 id="workflow-heading">Desde el primer lugar <em>hasta el último check-in.</em></h2>
+      <p>Todo está relacionado. Explora cómo una clase se organiza, ocupa y confirma. Es una representación interactiva del flujo planeado.</p></div>
+    </div>
+    <div class="workflow-frame workflow-canvas-isometric">
+      <div class="workflow-toolbar"><span><span class="toolbar-indicator"></span> RECORRIDO DE PRODUCTO</span><span>DEMO INTERACTIVA · SIN DATOS REALES</span></div>
+      <div class="workflow-board-container" id="workflowBoard" aria-label="Diagrama interactivo del flujo de una reserva">
+        <svg class="workflow-wires-svg" width="100%" height="100%" viewBox="0 0 1000 600" aria-hidden="true" preserveAspectRatio="none">
+          <path id="wire-1-2" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path id="wire-2-3" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path id="wire-3-4" fill="none" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <button class="workflow-node workflow-node-v7" id="node-agenda" data-step="0" style="--px: 6%; --py: 15%;" aria-pressed="true"><small class="workflow-node-step">01 / AGENDA</small><strong class="workflow-node-title">Elige una clase.</strong><span class="workflow-node-desc">Reformer · 08:00 · 8 lugares</span><b>Plazas abiertas ↗</b></button>
+        <button class="workflow-node workflow-node-v7" id="node-atomic" data-step="1" style="--px: 30%; --py: 49%;" aria-pressed="false"><small class="workflow-node-step">02 / RESERVA</small><strong class="workflow-node-title">Un lugar, una persona.</strong><span class="workflow-node-desc">Se asigna la plaza disponible</span><b>Confirmación ↗</b></button>
+        <button class="workflow-node workflow-node-v7" id="node-waitlist" data-step="2" style="--px: 56%; --py: 14%;" aria-pressed="false"><small class="workflow-node-step">03 / ESPERA</small><strong class="workflow-node-title">El cupo vuelve.</strong><span class="workflow-node-desc">Una cancelación libera espacio</span><b>Siguiente en lista ↗</b></button>
+        <button class="workflow-node workflow-node-v7" id="node-stripe" data-step="3" style="--px: 77%; --py: 49%;" aria-pressed="false"><small class="workflow-node-step">04 / RECEPCIÓN</small><strong class="workflow-node-title">Ya puedes entrar.</strong><span class="workflow-node-desc">Check-in de la alumna</span><b>Asistencia lista ↗</b></button>
+      </div>
+      <div class="workflow-bottom"><div class="workflow-active"><span class="workflow-index" id="workflowActiveIndex">01</span><div><strong id="workflowActiveTitle">Tu clase, en orden.</strong><p id="workflowActiveDescription">El estudio publica sus lugares y las alumnas eligen un horario.</p></div></div><div class="workflow-actions"><button id="workflowPrev" aria-label="Etapa anterior">←</button><button id="workflowNext" aria-label="Siguiente etapa">→</button></div></div>
+    </div>
+  </section>

@@ -1,0 +1,127 @@
+/** Open Break — Authentic Weekly Grid (Sprint 5 / V7-07 Resolution) */
+.schedule-view-toggle {
+  display: flex;
+  background: var(--bg-gray-subtle, #f4f4f5);
+  padding: 4px;
+  border-radius: 12px;
+  gap: 4px;
+  border: 1px solid var(--border-subtle, #e4e4e7);
+}
+
+.view-toggle-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-editorial, #71717a);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-toggle-btn.active {
+  background: #ffffff;
+  color: var(--text-black, #18181b);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Authentic Desktop Weekly Grid Layout */
+.weekly-grid-container {
+  display: grid;
+  grid-template-columns: 60px repeat(7, 1fr);
+  gap: 8px;
+  background: #fcfcfc;
+  border: 1px solid var(--border-subtle, #e4e4e7);
+  border-radius: 16px;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.grid-header-col {
+  text-align: center;
+  padding: 8px 4px;
+  border-bottom: 2px solid var(--border-subtle, #e4e4e7);
+}
+
+.grid-day-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  color: var(--accent-orange, #ea580c);
+  font-weight: 700;
+}
+
+.grid-num-label {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-black, #18181b);
+}
+
+.grid-time-sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  color: #a1a1aa;
+  padding-top: 40px;
+}
+
+.grid-day-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 380px;
+}
+
+.grid-class-cell {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle, #e4e4e7);
+  border-left: 3px solid var(--accent-orange, #ea580c);
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.grid-class-cell:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--accent-orange, #ea580c);
+}
+
+.grid-class-cell.is-reserved {
+  background: #f0fdf4;
+  border-left-color: var(--accent-green, #10b981);
+}
+
+.grid-class-cell.is-full {
+  background: #fafafa;
+  opacity: 0.85;
+}
+
+.grid-class-time {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.64rem;
+  color: #71717a;
+  margin-bottom: 2px;
+}
+
+.grid-class-title {
+  font-weight: 700;
+  color: #18181b;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.grid-class-spots {
+  font-size: 0.64rem;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .weekly-grid-container {
+    display: none;
+  }
+}

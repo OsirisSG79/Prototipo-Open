@@ -1,0 +1,51 @@
+/* Kinetic Typography for Hero Rotating Words (Character Stagger Engine / Zero-CLS) */
+.ob-hero-rotating-wrap {
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  vertical-align: bottom;
+  color: var(--ob-orange, #ed512a);
+  font-style: italic;
+  padding: 0 6px;
+  /* Proportional box matching widest string (Estudios Boutique) for ZERO Cumulative Layout Shift */
+  min-width: 14.5ch;
+  text-align: left;
+}
+
+#ob-hero-rotating-word {
+  display: inline-flex;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.kinetic-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(105%) rotateX(-20deg);
+  animation: charEnter 0.46s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: transform 0.38s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.34s ease;
+  will-change: transform, opacity;
+}
+
+.kinetic-char.char-leaving {
+  opacity: 0;
+  transform: translateY(-105%) rotateX(20deg);
+}
+
+@keyframes charEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0%) rotateX(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kinetic-char {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}

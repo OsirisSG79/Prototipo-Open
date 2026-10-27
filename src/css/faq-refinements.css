@@ -1,0 +1,56 @@
+/** Open Break — FAQ Accordion Polish & Accessible Micro-Interactions */
+.faq-item {
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-radius: 16px;
+  background: #FFFFFF;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.faq-item:hover {
+  border-color: rgba(234, 88, 12, 0.35);
+  box-shadow: 0 6px 18px -4px rgba(0, 0, 0, 0.06);
+}
+
+.faq-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 24px;
+  background: transparent;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-black, #18181B);
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq-trigger svg {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.faq-trigger[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+  stroke: var(--accent-orange, #ea580c);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 24px;
+  color: var(--text-editorial, #52525b);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.35s ease;
+}
+
+.faq-item.is-open .faq-answer {
+  max-height: 240px;
+  padding-bottom: 22px;
+}
