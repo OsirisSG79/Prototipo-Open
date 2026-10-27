@@ -1,0 +1,24 @@
+/* Regression checks for the deterministic LOCAL demonstration (not production). */
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const path=require('node:path');
+const code=fs.readFileSync(path.join(__dirname,'..','src','js','schedule-sync.js'),'utf8');
+const context=vm.createContext({document:{getElementById:()=>null},window:{addEventListener(){}}});
+vm.runInContext(code,context);
+const evaluate=(expression)=>vm.runInContext(expression,context);
+assert.equal(evaluate('userCredits'),8);
+assert.equal(evaluate("bookFromDeskSchedule('c5')"),true);
+assert.equal(evaluate('userCredits'),7);
+assert.equal(evaluate("bookFromDeskSchedule('c5')"),false,'duplicate must not charge');
+assert.equal(evaluate('userCredits'),7);
+assert.equal(evaluate("bookFromDeskSchedule('c2')"),'waitlist');
+assert.equal(evaluate('userCredits'),7,'waitlist must not debit');
+assert.equal(evaluate('waiting.has("c2")'),true);
+assert.equal(evaluate('appCancelBooking()'),true);
+assert.equal(evaluate('userCredits'),8);
+assert.equal(evaluate('classById.get("c5").spots'),3,'cancel must release the place');
+assert.equal(evaluate("activeBookings.has('c5')"),false);
+assert.equal(evaluate("bookFromDeskSchedule('c5')"),true,'rebooking after cancellation is allowed');
+assert.equal(evaluate('userCredits'),7);
+console.log('PASS: booking, idempotence, waitlist, credit balance and rebooking');
